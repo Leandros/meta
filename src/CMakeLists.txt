@@ -18,9 +18,30 @@
 ###############################################################################
 
 
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
+### Project Setup
+project(meta)
+set(meta_VERSION_MAJOR 1)
+set(meta_VERSION_MINOR 0)
+set(meta_VERSION_PATCH 0)
 
-### Projects
-include(src/CMakeLists.txt)
-include(lib/CMakeLists.txt)
+
+### Configure File
+configure_file(
+    "${PROJECT_SOURCE_DIR}/src/config.h.in"
+    "${PROJECT_BINARY_DIR}/meta/config.h"
+)
+
+
+### Include Directories
+include_directories(
+    "${PROJECT_BINARY_DIR}"
+    "${PROJECT_SOURCE_DIR}/src"
+    "${PROJECT_SOURCE_DIR}/include"
+)
+
+
+### Main Executable
+add_executable(meta
+    src/main.cpp
+)
 

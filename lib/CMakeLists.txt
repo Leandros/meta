@@ -17,10 +17,12 @@
 ## along with meta.  If not, see <http://www.gnu.org/licenses/>.             ##
 ###############################################################################
 
+### Project Setup
+project(meta)
 
-cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
-### Projects
-include(src/CMakeLists.txt)
-include(lib/CMakeLists.txt)
+### Main Executable
+add_executable(meta
+    src/main.cpp
+)
 

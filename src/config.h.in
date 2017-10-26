@@ -17,14 +17,7 @@
 /* along with meta.  If not, see <http://www.gnu.org/licenses/>.             */
 /* ========================================================================= */
 
-#include <stdio.h>
-#include <meta/config.h>
-
-int
-main(void)
-{
-    printf("hello, world\n");
-    printf("%d.%d.%d\n", META_VERSION_MAJOR, META_VERSION_MINOR, META_VERSION_PATCH);
-    return 0;
-}
+#define META_VERSION_MAJOR      @meta_VERSION_MAJOR@
+#define META_VERSION_MINOR      @meta_VERSION_MINOR@
+#define META_VERSION_PATCH      @meta_VERSION_PATCH@
 
