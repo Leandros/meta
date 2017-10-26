@@ -17,12 +17,22 @@
 ## along with meta.  If not, see <http://www.gnu.org/licenses/>.             ##
 ###############################################################################
 
-### Project Setup
-project(meta)
-
 
 ### Main Executable
-add_executable(meta
-    src/main.cpp
+add_library(${meta_LIB_NAME}
+    lib.cpp
 )
+
+
+### Header Files
+set(meta_LIB_HEADERS
+    "${PROJECT_SOURCE_DIR}/include/meta/meta.hpp"
+)
+
+
+###############################################################################
+## INSTALLATION
+###############################################################################
+install(TARGETS ${meta_LIB_NAME} DESTINATION lib)
+install(FILES ${meta_LIB_HEADERS} DESTINATION include)
 

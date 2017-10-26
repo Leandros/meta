@@ -17,7 +17,14 @@
 /* along with meta.  If not, see <http://www.gnu.org/licenses/>.             */
 /* ========================================================================= */
 
+/* Project Settings */
 #define META_VERSION_MAJOR      @meta_VERSION_MAJOR@
 #define META_VERSION_MINOR      @meta_VERSION_MINOR@
 #define META_VERSION_PATCH      @meta_VERSION_PATCH@
+
+/* Options */
+#cmakedefine BUILD_TESTS
+
+/* Feature Tests */
+#cmakedefine HAVE_SNPRINTF
 

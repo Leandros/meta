@@ -19,12 +19,14 @@
 
 #include <stdio.h>
 #include <meta/config.h>
+#include <meta/meta.hpp>
 
 int
 main(void)
 {
     printf("hello, world\n");
     printf("%d.%d.%d\n", META_VERSION_MAJOR, META_VERSION_MINOR, META_VERSION_PATCH);
+    printf("foo() = %d\n", foo());
     return 0;
 }
 

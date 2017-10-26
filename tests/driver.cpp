@@ -16,11 +16,24 @@
 /* You should have received a copy of the GNU General Public License         */
 /* along with meta.  If not, see <http://www.gnu.org/licenses/>.             */
 /* ========================================================================= */
-#ifndef META_HPP
-#define META_HPP
-#pragma once
+#define CATCH_CONFIG_RUNNER
+#include "catch.hpp"
 
-int foo();
 
-#endif /* META_HPP */
+int
+main(int argc, char **argv)
+{
+    /* Setup ... */
+
+    /* Catch Setup */
+    Catch::Session session;
+    int ret = session.applyCommandLine(argc, argv);
+    if (ret) return ret;
+    int nfailed = session.run();
+
+    /* Cleanup ... */
+
+
+    return nfailed > 0 ? 1 : 0;
+}
 

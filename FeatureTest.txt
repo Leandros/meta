@@ -17,30 +17,12 @@
 ## along with meta.  If not, see <http://www.gnu.org/licenses/>.             ##
 ###############################################################################
 
-
-### Include Directories
-include_directories(
-    "${PROJECT_BINARY_DIR}"
-    "${PROJECT_SOURCE_DIR}/src"
-    "${PROJECT_SOURCE_DIR}/include"
-)
+### Setup. See all available modules here:
+### https://cmake.org/cmake/help/latest/manual/cmake-modules.7.html
+include(CheckFunctionExists)
+include(CheckSymbolExists)
 
 
-### Main Executable
-add_executable(${meta_EXE_NAME}
-    main.cpp
-)
-
-
-### Link Libraries
-target_link_libraries(${meta_EXE_NAME}
-    ${meta_LIB_NAME}
-)
-
-
-
-###############################################################################
-## INSTALLATION
-###############################################################################
-install(TARGETS ${meta_EXE_NAME} DESTINATION bin)
+### Check for functions (check_function_exists or check_symbol_exists)
+check_symbol_exists(snprintf "stdio.h;stdlib.h" HAVE_SNPRINTF)
 

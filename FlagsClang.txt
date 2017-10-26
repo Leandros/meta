@@ -18,29 +18,3 @@
 ###############################################################################
 
 
-### Include Directories
-include_directories(
-    "${PROJECT_BINARY_DIR}"
-    "${PROJECT_SOURCE_DIR}/src"
-    "${PROJECT_SOURCE_DIR}/include"
-)
-
-
-### Main Executable
-add_executable(${meta_EXE_NAME}
-    main.cpp
-)
-
-
-### Link Libraries
-target_link_libraries(${meta_EXE_NAME}
-    ${meta_LIB_NAME}
-)
-
-
-
-###############################################################################
-## INSTALLATION
-###############################################################################
-install(TARGETS ${meta_EXE_NAME} DESTINATION bin)
-

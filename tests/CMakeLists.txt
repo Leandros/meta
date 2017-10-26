@@ -27,20 +27,13 @@ include_directories(
 
 
 ### Main Executable
-add_executable(${meta_EXE_NAME}
-    main.cpp
+add_executable(${meta_TEST_EXE}
+    driver.cpp
 )
 
 
 ### Link Libraries
-target_link_libraries(${meta_EXE_NAME}
+target_link_libraries(${meta_TEST_EXE}
     ${meta_LIB_NAME}
 )
-
-
-
-###############################################################################
-## INSTALLATION
-###############################################################################
-install(TARGETS ${meta_EXE_NAME} DESTINATION bin)
 

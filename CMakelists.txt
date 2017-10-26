@@ -18,9 +18,52 @@
 ###############################################################################
 
 
+### CMake setup
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
-### Projects
-include(src/CMakeLists.txt)
-include(lib/CMakeLists.txt)
+
+### Project Setup
+project(meta CXX)
+set(meta_VERSION_MAJOR 1)
+set(meta_VERSION_MINOR 0)
+set(meta_VERSION_PATCH 0)
+
+
+### Options
+option(BUILD_TESTS "Build the test suite" OFF)
+
+
+### Config
+set(meta_EXE_NAME "meta")
+set(meta_LIB_NAME "libmeta")
+set(meta_TEST_EXE "tests")
+
+
+### Feature Testing
+include(FeatureTest.txt)
+
+
+### Compiler Options
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "clang")
+    include(FlagsClang.txt)
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    include(FlagsMSVC.txt)
+endif()
+
+
+### Configure File
+configure_file(
+    "${PROJECT_SOURCE_DIR}/src/config.h.in"
+    "${PROJECT_BINARY_DIR}/meta/config.h"
+)
+
+
+### Executable & Libraries
+add_subdirectory(lib)
+add_subdirectory(src)
+
+### Tests
+if(BUILD_TESTS)
+    add_subdirectory(tests)
+endif(BUILD_TESTS)
 
