@@ -35,3 +35,9 @@ latex/
 tags
 tags.temp
 
+# Build directories
+build/
+out/
+_build/
+_out/
+
