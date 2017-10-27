@@ -2,6 +2,16 @@
 
 An exercise in exploring compile time code generation in C++.
 
+# Table of Contents
+
+- [Requirements](#requirements)
+- [Getting Started](#getting-started)
+- [Branch Policy](#branch-policy)
+- [Contributing](#contributing)
+- [Changelog](#changelog)
+- [License](#license)
+
+
 # Requirements
 
 To compile meta, you require the following:
