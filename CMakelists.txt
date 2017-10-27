@@ -51,6 +51,7 @@ endif(NOT CMAKE_BUILD_TYPE)
 set(meta_EXE_NAME "meta")
 set(meta_LIB_NAME "libmeta")
 set(meta_TEST_EXE "tests")
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 
 ### Feature Testing
@@ -71,6 +72,10 @@ configure_file(
     "${PROJECT_SOURCE_DIR}/src/config.h.in"
     "${PROJECT_BINARY_DIR}/meta/config.h"
 )
+
+
+### External libraries
+include(ext/libclang.txt)
 
 
 ### Executable & Libraries

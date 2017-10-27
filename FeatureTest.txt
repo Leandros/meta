@@ -26,3 +26,11 @@ include(CheckSymbolExists)
 ### Check for functions (check_function_exists or check_symbol_exists)
 check_symbol_exists(snprintf "stdio.h;stdlib.h" HAVE_SNPRINTF)
 
+
+### Check System
+if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+    set(IS_64BIT 0)
+else()
+    set(IS_64BIT 1)
+endif()
+
