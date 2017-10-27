@@ -17,7 +17,6 @@
 ## along with meta.  If not, see <http://www.gnu.org/licenses/>.             ##
 ###############################################################################
 
-
 ### CMake setup
 cmake_minimum_required(VERSION 3.5 FATAL_ERROR)
 
@@ -30,7 +29,22 @@ set(meta_VERSION_PATCH 0)
 
 
 ### Options
-option(BUILD_TESTS "Build the test suite" OFF)
+option(BUILD_TESTS "Build the test suite" ON)
+option(USE_UBSAN "Enable Undefined Behavior Sanitizer (clang only)" OFF)
+option(USE_UBSAN_MINIMAL "Enable minimal Undefined Behaviour Sanitizer (clang only)" OFF)
+option(USE_ADDRESSSAN "Enable Address Sanitizer (clang only)" OFF)
+option(USE_THREADSAN "Enable Thread Sanitizer (clang only)" OFF)
+option(USE_MEMSAN "Enable Memory Sanitizer (clang only)" OFF)
+option(USE_CFISAN "Enable CFI Sanitizer (clang only)" OFF)
+option(USE_STACKSAN "Enable Stack Sanitizer (clang only)" OFF)
+
+
+### Specify to build RelWithDebInfo by default
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
+        "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+        FORCE)
+endif(NOT CMAKE_BUILD_TYPE)
 
 
 ### Config
@@ -44,7 +58,8 @@ include(FeatureTest.txt)
 
 
 ### Compiler Options
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "clang")
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "clang"
+ OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
     include(FlagsClang.txt)
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     include(FlagsMSVC.txt)
