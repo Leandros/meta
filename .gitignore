@@ -41,3 +41,6 @@ out/
 _build/
 _out/
 
+# Logfiles
+*.log
+
