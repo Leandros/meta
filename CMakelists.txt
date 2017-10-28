@@ -55,15 +55,18 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 
 ### Feature Testing
-include(FeatureTest.txt)
+include(FeatureTest.cmake)
 
 
 ### Compiler Options
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "clang"
+ OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"
  OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
-    include(FlagsClang.txt)
+    include(FlagsClang.cmake)
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    include(FlagsMSVC.txt)
+    include(FlagsMSVC.cmake)
+else()
+    message(STATUS "Unknown Compiler: ${CMAKE_CXX_COMPILER_ID} - ERROR")
 endif()
 
 
@@ -75,7 +78,7 @@ configure_file(
 
 
 ### External libraries
-include(ext/libclang.txt)
+#include(ext/libclang.cmake)
 
 
 ### Executable & Libraries

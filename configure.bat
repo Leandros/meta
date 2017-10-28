@@ -19,7 +19,7 @@
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 :: CONFIGURATION
-set "LLVMPath=C:\\Program Files\\LLVM"
+set "LLVMPath=C:\Program Files\LLVM"
 set "MSVCPath=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community"
 
 echo "Cleanup old build ..."
@@ -30,7 +30,7 @@ mkdir build
 
 if "%1"=="llvm" goto llvm
 if "%1"=="msvc" goto msvc
-goto end
+goto help
 
 
 :: LLVM
@@ -39,15 +39,15 @@ echo "Configure LLVM ..."
 echo "Path: %LLVMPath%"
 echo.
 
+:: Setup MSVC environment
+call "%MSVCPath%\VC\Auxiliary\Build\vcvarsall.bat" amd64
+
+:: Override CL.EXE with clang-cl.exe
+set "PATH=%LLVMPath%\msbuild-bin;%PATH%"
+
 :: Run CMake
 cd build
-cmake .. -G"Ninja" ^
-    -DBUILD_TESTS:BOOL=YES ^
-    -DCMAKE_C_FLAGS=TRUE ^
-    -DCMAKE_CXX_FLAGS=TRUE ^
-    -DCMAKE_C_COMPILER="%LLVMPath%\\bin\\clang.exe" ^
-    -DCMAKE_CXX_COMPILER="%LLVMPath%\\bin\\clang++.exe" ^
-    -DCMAKE_LINKER="%LLVMPath%\\bin\\lld-link.exe"
+cmake .. -G"NMake Makefiles JOM"
 
 goto end
 
@@ -63,14 +63,20 @@ call "%MSVCPath%\VC\Auxiliary\Build\vcvarsall.bat" amd64
 
 :: Run CMake
 cd build
-cmake .. -G"NMake Makefiles JOM" -DBUILD_TESTS:BOOL=YES
+cmake .. -G"NMake Makefiles JOM"
 
 goto end
 
 
 :end
 echo "Success ..."
+goto quit
 
 :fail
 echo "ERROR"
+goto quit
+
+:help
+echo "USAGE: configure.bat [llvm/msvc]"
+:quit
 
