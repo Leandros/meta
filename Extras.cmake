@@ -33,7 +33,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set(IS_MSVC 1)
 endif()
 
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "gcc")
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "(gcc|GNU)")
     set(IS_GCC 1)
 endif()
 
@@ -71,38 +71,72 @@ endfunction()
 
 ## Precompiled Headers
 ###############################################################################
-#function(add_precompiled_header target headername)
-#    if(IS_MSVC)
-#        # Compile the precompiled header object file
-#        strip_suffix("${headername}" filename)
-#        set(srcfile "${filename}.cpp")
-#        set(objfile "${filename}${CMAKE_CXX_OUTPUT_EXTENSION}")
-#
-#        set(objpath "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${objfile}")
-#        set_source_files_properties(${srcfile} PROPERTIES
-#            COMPILE_FLAGS "/Yc\"${headername}\"")
-#
-#        # Add precompiled source to target
-#        target_sources(${target} PRIVATE ${srcfile})
-#
-#        # Get property
-#        get_target_property(prop ${target} COMPILE_FLAGS)
-#        if(NOT prop)
-#            set(prop "")
-#        endif()
-#
-#        # Name of pch file
-#        set(prop "${prop} /Yu\"${headername}\"")
-#        # Name of pch object
-#        set(prop "${prop} /Fp\"${objpath}\"")
-#        # Always include pch
-#        set(prop "${prop} /FI\"${headername}\"")
-#
-#        # Apply properties
-#        set_target_properties(${target} PROPERTIES COMPILE_FLAGS "${prop}")
-#    elseif(IS_CLANG OR IS_GCC)
-#    else()
-#        message(FATAL_ERROR "Compiler does not support precompiled headers")
-#    endif()
-#endfunction()
+function(add_precompiled_header target headername)
+    # Compile the precompiled header object file
+    strip_suffix("${headername}" filename)
+    set(srcfile "${filename}.cpp")
+    set(pch_added FALSE)
+
+    # Append a property
+    macro(append_property _filename _name _val)
+        set_property(SOURCE ${_filename} APPEND PROPERTY ${_name} "${_val}")
+    endmacro()
+
+    # Check whether the source file exists
+    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${srcfile}")
+        message(FATAL_ERROR "${srcfile} does not exist")
+    endif()
+
+    if(IS_MSVC)
+        set(objfile "${filename}.pch")
+        set(objpath "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${objfile}")
+
+        # Raise the memory limit for PCHs
+        target_compile_options(${target} PRIVATE /Zm200)
+
+        get_target_property(sources ${target} SOURCES)
+        foreach(source ${sources})
+            set(flags "")
+            if(source STREQUAL "${srcfile}")
+                set(pch_added TRUE)
+                set(flags "${flags} /Fp\"${objpath}\"")
+                set(flags "${flags} /Yc\"${headername}\"")
+                append_property(${source} COMPILE_FLAGS "${flags}")
+                if(NOT ${CMAKE_GENERATOR} MATCHES "Visual Studio .*")
+                    append_property(${source} OBJECT_OUTPUTS "${objpath}")
+                endif()
+            elseif(source MATCHES ".+(cpp|cxx|cc)")
+                set(flags "${flags} /Fp\"${objpath}\"")
+                set(flags "${flags} /Yu\"${headername}\"")
+                set(flags "${flags} /FI\"${headername}\"")
+                append_property("${source}" COMPILE_FLAGS "${flags}")
+                if(NOT ${CMAKE_GENERATOR} MATCHES "Visual Studio .*")
+                    append_property(${source} OBJECT_DEPENDS "${objpath}")
+                endif()
+            endif()
+        endforeach()
+
+    elseif(IS_CLANG OR IS_GCC)
+        get_target_property(sources ${target} SOURCES)
+        foreach(source ${sources})
+            set(flags "")
+            if(source STREQUAL "${srcfile}")
+                set(pch_added TRUE)
+                set(flags "${flags} -x c++-header")
+                append_property("${source}" COMPILE_FLAGS "${flags}")
+            elseif(source MATCHES ".+(cpp|cxx|cc)")
+                set(flags "${flags} -include \"${headername}\"")
+                append_property("${source}" COMPILE_FLAGS "${flags}")
+            endif()
+        endforeach()
+
+    else()
+        message(FATAL_ERROR "Compiler does not support precompiled headers")
+    endif()
+
+    # Error Checking
+    if(NOT pch_added)
+        message(FATAL_ERROR "${srcfile} was not added to ${target}")
+    endif()
+endfunction()
 

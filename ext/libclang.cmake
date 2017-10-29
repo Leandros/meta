@@ -40,7 +40,7 @@ if(NOT PATH_TO_LIBCLANG)
         endif()
 
     elseif(UNIX)
-        message(FATAL "not yet implemented")
+        message(FATAL_ERROR "not yet implemented")
     endif()
 endif()
 
@@ -52,7 +52,7 @@ endif()
 
 ### Download libclang, if required.
 if(CLANG_DL)
-    message("Downloading libclang v${CLANG_VERSION}")
+    message(STATUS "Downloading libclang v${CLANG_VERSION}")
     set(CLANG_REMOTE "${CLANG_BASE}/${CLANG_FILE}")
     file(DOWNLOAD "${CLANG_REMOTE}" "${CLANG_LOCAL}" SHOW_PROGRESS)
 endif()
@@ -60,7 +60,7 @@ endif()
 ### Extract Archive.
 set(CLANG_FILE "${CLANG_LOCAL}")
 if(NOT EXISTS "${CLANG_DIR}")
-    message("Extracting libclang v${CLANG_VERSION} ...")
+    message(STATUS "Extracting libclang v${CLANG_VERSION} ...")
     if(CLANG_FILE MATCHES ".+bz2")
         execute_process(COMMAND tar -xjf "${CLANG_FILE}")
     elseif(CLANG_FILE MATCHES ".+xz")

@@ -18,8 +18,7 @@
 ###############################################################################
 
 ### CMake setup
-cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
-cmake_policy(SET CMP0026 OLD)
+cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 
 ### Project Setup
 project(meta CXX)
@@ -57,7 +56,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 ### Feature Testing
 include(Extras.cmake)
 include(FeatureTest.cmake)
-include(PrecompiledHeader.cmake)
 
 
 ### Compiler Options
