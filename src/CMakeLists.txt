@@ -29,7 +29,15 @@ include_directories(
 ### Main Executable
 add_executable(${meta_EXE_NAME}
     main.cpp
+    stdafx.hpp
+    stdafx.cpp
 )
+
+### Precompiled header
+add_precompiled_header(${meta_EXE_NAME}
+    stdafx.hpp
+    SOURCE_CXX stdafx.cpp
+    FORCEINCLUDE)
 
 
 ### Link Libraries

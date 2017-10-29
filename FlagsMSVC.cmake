@@ -54,10 +54,12 @@ link_debug("/DEBUG")
 
 link_debugrelease("/DEBUG")
 link_debugrelease("/OPT:REF,ICF")
+link_debugrelease("/INCREMENTAL:NO")
 
 link_release("/RELEASE")
 link_release("/LTCG")
 link_release("/OPT:REF,ICF")
+link_debugrelease("/INCREMENTAL:NO")
 
 
 
