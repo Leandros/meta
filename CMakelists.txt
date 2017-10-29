@@ -76,7 +76,7 @@ configure_file(
 
 
 ### External libraries
-#include(ext/libclang.cmake)
+include(ext/libclang.cmake)
 
 
 ### Executable & Libraries

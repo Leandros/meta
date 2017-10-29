@@ -19,10 +19,23 @@
 
 #include <meta/config.h>
 #include <meta/meta.hpp>
+#include <meta/internal/clang.hpp>
 
 int
 main(void)
 {
+    clang::TLU tlu;
+    if (!tlu.init("test.h"))
+        return 1;
+
+    auto cb = [](clang::Cursor c, void *ctx)
+    {
+        printf("%s => %s\n",
+            c.name().c_str(), c.to_string().c_str());
+    };
+    tlu.visit(cb, nullptr);
+
+
     return 0;
 }
 

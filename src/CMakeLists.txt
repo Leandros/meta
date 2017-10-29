@@ -23,6 +23,7 @@ include_directories(
     "${PROJECT_BINARY_DIR}"
     "${PROJECT_SOURCE_DIR}/src"
     "${PROJECT_SOURCE_DIR}/include"
+    "${CLANG_INCLUDE_PATH}"
 )
 
 
@@ -43,6 +44,7 @@ add_precompiled_header(${meta_EXE_NAME}
 ### Link Libraries
 target_link_libraries(${meta_EXE_NAME}
     ${meta_LIB_NAME}
+    ${CLANG_LIB_NAME}
 )
 
 
