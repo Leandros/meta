@@ -59,8 +59,6 @@ class CXStringRAII
 {
     inline CXStringRAII(CXStringRAII const &) = delete;
     inline CXStringRAII &operator=(CXStringRAII const &) = delete;
-    inline CXStringRAII(CXStringRAII &&) = delete;
-    inline CXStringRAII &operator=(CXStringRAII &&) = delete;
 
 public:
     inline CXStringRAII(CXString const &s)
@@ -71,6 +69,21 @@ public:
     CXStringRAII()
     {
         clang_disposeString(m_string);
+    }
+
+    inline
+    CXStringRAII(CXStringRAII &&other)
+    {
+        this->m_string = other.m_string;
+        memset(&other.m_string, 0x0, sizeof(CXString));
+    }
+
+    inline CXStringRAII &
+    operator=(CXStringRAII &&other)
+    {
+        this->m_string = other.m_string;
+        memset(&other.m_string, 0x0, sizeof(CXString));
+        return *this;
     }
 
     inline char const *

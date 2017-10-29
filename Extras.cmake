@@ -33,7 +33,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set(IS_MSVC 1)
 endif()
 
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "(gcc|GNU)")
+if("${CMAKE_CXX_COMPILER_ID}" MATCHES "(gcc|GNU)")
     set(IS_GCC 1)
 endif()
 

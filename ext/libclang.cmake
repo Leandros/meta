@@ -40,7 +40,12 @@ if(NOT PATH_TO_LIBCLANG)
         endif()
 
     elseif(UNIX)
-        message(FATAL_ERROR "not yet implemented")
+        if(NOT IS_64BIT)
+            message(FATAL_ERROR "No precompiled libclang binaries available")
+        else()
+            set(CLANG_DIR "clang+llvm-${CLANG_VERSION}-x86_64-linux-gnu-debian8")
+            set(CLANG_FILE "${CLANG_DIR}.tar.xz")
+        endif()
     endif()
 endif()
 
@@ -83,8 +88,12 @@ if(EXISTS "${CLANG_DIR}")
 endif()
 
 ### Libraries to link
+find_library(TMP
+    NAMES clang libclang
+    PATHS ${PATH_TO_LIBCLANG}/lib
+    NO_DEFAULT_PATH)
 set(CLANG_LIB_NAME
-    ${PATH_TO_LIBCLANG}/lib/libclang${CMAKE_STATIC_LIBRARY_SUFFIX}
+    ${TMP}
 )
 
 set(CLANG_INCLUDE_PATH

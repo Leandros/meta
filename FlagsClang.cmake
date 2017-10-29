@@ -51,16 +51,14 @@ endif()
 ##############################################################################
 ## Optimizations
 ##############################################################################
-flag("-std=c++14")                      # C++ standard
+flag("-std=c++11")                      # C++ standard
 flag("-fpic")                           # Position independent code
 flag("-fno-math-errno")                 # Math funcs never set errno
 flag("-fno-fast-math")                  # Disable fast-math
-flag("-fcolor-diagnostics")             # Colored diagnostics
 flag("-fno-exceptions")                 # Disable exceptions
 flag("-fno-rtti")                       # Disable RTTI
 flag("-freciprocal-math")               # Allow div to be optimized
 flag("-fstrict-enums")                  # Assume enums are always in range
-flag("-fstrict-vtable-pointers")        # Enable strict C++ vtable rules
 flag("-fno-signed-zeros")               # Assume floats have no signed zeros
 flag("-ffunction-sections")             # Put functions in own sections
 flag("-fms-extensions")                 # Enable Microsoft extensions
@@ -82,6 +80,12 @@ flag_release("-flto")                           # Enable LTO (full)
 flag_release("-fwhole-program-vtables")         # Enable whole program vtable opt
 flag_release("-fno-stack-protector")            # Disable stack protector
 
+### Clang only flags
+if(IS_CLANG)
+    flag("-fcolor-diagnostics")                 # Colored diagnostics
+    flag("-fstrict-vtable-pointers")            # Enable strict C++ vtable rules
+endif()
+
 ### MSVC Specific
 if(NOT MSVC)
     flag("-ftrapv")                             # Trap on integer overflow
@@ -101,31 +105,35 @@ flag("-Wshadow")
 flag("-Wno-cast-qual")
 flag("-Wcast-align")
 flag("-Wconversion")
-flag("-Wjump-misses-init")
 flag("-Wno-multichar")
 flag("-Wno-packed")
 flag("-Wstrict-overflow")
 flag("-Wvla")
 flag("-Wformat")
 flag("-Wno-format-zero-length")
-flag("-Wstrict-prototypes")
-flag("-Wno-c11-extensions")
 flag("-Winvalid-pch")
 flag("-Wswitch-enum")
 flag("-Wunused-variable")
 flag("-Wunused-function")
-flag("-Wunused-private-field")
 
-# Warnings as errors
+### Warnings as errors
 flag("-Werror=unused-result")
 
-# Disabled warnings
+### Disabled warnings
 flag("-Wno-sign-conversion")
-flag("-Wno-unknown-warning-option")
 flag("-Wno-cast-align")
-flag("-Wno-microsoft-anon-tag")
-flag("-Wno-unused-parameter")
-flag("-Wno-tautological-constant-out-of-range-compare")
+
+### Clang only
+if(IS_CLANG)
+    ### Warnings
+    flag("-Wunused-private-field")
+
+    ### Disabled warnings
+    flag("-Wno-unknown-warning-option")
+    flag("-Wno-microsoft-anon-tag")
+    flag("-Wno-unused-parameter")
+    flag("-Wno-tautological-constant-out-of-range-compare")
+endif()
 
 
 ##############################################################################

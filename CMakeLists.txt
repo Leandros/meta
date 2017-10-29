@@ -59,7 +59,7 @@ include(FeatureTest.cmake)
 
 
 ### Compiler Options
-if(IS_CLANG)
+if(IS_CLANG OR IS_GCC)
     include(FlagsClang.cmake)
 elseif(IS_MSVC)
     include(FlagsMSVC.cmake)
