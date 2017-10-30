@@ -4,6 +4,16 @@ version: '{build}'
 # fetch repository as zip archive
 shallow_clone: true
 
+# Branches to build
+branches:
+    only:
+        - master
+        - dev
+
+
+###############################################################################
+### Environment
+###############################################################################
 os:
     - Visual Studio 2017
     - Visual Studio 2015
@@ -14,20 +24,47 @@ environment:
 
         - additional_flags: ""
 
-
 matrix:
     exclude:
         -
             additional_flags: "/permissive-"
             os: Visual Studio 2015
 
+# Preserve libclang downloads
+cache:
+    - ext\cache
+
+
+###############################################################################
+### Init
+###############################################################################
 init:
     - git config --global core.autocrlf input
     # Set build version to git commit-hash
     - ps: Update-AppveyorBuild -Version "$($env:APPVEYOR_REPO_BRANCH) - $($env:APPVEYOR_REPO_COMMIT)"
 
 install:
+    # All dependencies are installed here
+    - mkdir C:\projects\deps
+    - cd C:\projects\deps
+
+    # Install a 7zip
     - cinst 7zip
+
+    # Install recent CMake
+    - set CMAKE_URL="https://cmake.org/files/v3.8/cmake-3.8.0-win64-x64.zip"
+    - appveyor DownloadFile %CMAKE_URL% -FileName cmake.zip
+    - 7z x cmake.zip -oC:\projects\deps > nul
+    - move C:\projects\deps\cmake-* C:\projects\deps\cmake # Move to a version-agnostic directory
+    - set PATH=C:\projects\deps\cmake\bin;%PATH%
+    - cmake --version
+
+    # Download libclang releases
+    - cd C:\projects\meta
+    - set CLANG_WIN32=llvm-5.0.0-win32.exe
+    - set CLANG_WIN64=llvm-5.0.0-win64.exe
+    - curl -fsS -o ext/cache/%CLANG_WIN32% http://releases.llvm.org/%CLANG_WIN32%
+    - curl -fsS -o ext/cache/%CLANG_WIN64% http://releases.llvm.org/%CLANG_WIN64%
 
 platform:
     - Win32
@@ -37,6 +74,10 @@ configuration:
     - Debug
     - Release
 
+
+###############################################################################
+### Building
+###############################################################################
 before_build:
     - cmake -H. -Bbuild -A%PLATFORM%
 

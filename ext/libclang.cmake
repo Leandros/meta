@@ -54,7 +54,7 @@ if(NOT PATH_TO_LIBCLANG)
 endif()
 
 ### Check whether libclang already exists, skip if it does.
-set(CLANG_LOCAL "${CMAKE_SOURCE_DIR}/ext/${CLANG_FILE}")
+set(CLANG_LOCAL "${CMAKE_SOURCE_DIR}/ext/cache/${CLANG_FILE}")
 if(EXISTS "${CLANG_LOCAL}")
     file(SHA256 "${CLANG_LOCAL}" CLANG_LOCAL_SHA256)
     if("${CLANG_LOCAL_SHA256}" STREQUAL "${CLANG_SHA256}")
