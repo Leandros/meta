@@ -72,8 +72,9 @@ before_script:
     - cmake --version
     - $CXX --version
     - cd ${TRAVIS_BUILD_DIR}
-    - cmake -H. -Bbuild -CMAKE_BUILD_TYPE=${BUILD_TYPE} -G"Unix Makefiles"
+    - mkdir -p build
     - cd build
+    - cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -G"Unix Makefiles"
 
 script:
     - make -j4
