@@ -101,13 +101,13 @@ endif()
 ### Libraries to link
 find_library(TMP
     NAMES clang libclang
-    PATHS ${PATH_TO_LIBCLANG}/lib
+    PATHS "${PATH_TO_LIBCLANG}/lib"
     NO_DEFAULT_PATH)
 set(CLANG_LIB_NAME
-    ${TMP}
+    "${TMP}"
 )
 
 set(CLANG_INCLUDE_PATH
-    ${PATH_TO_LIBCLANG}/include
+    "${PATH_TO_LIBCLANG}/include"
 )
 
