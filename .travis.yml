@@ -1,5 +1,5 @@
 # General Settings
-language: c++
+language: cpp
 sudo: false
 
 matrix:
@@ -69,6 +69,8 @@ install:
 ###############################################################################
 before_script:
     - export CXX=${COMPILER}
+    - cmake --version
+    - $CXX --version
     - cd ${TRAVIS_BUILD_DIR}
     - cmake -H. -Bbuild -CMAKE_BUILD_TYPE=${BUILD_TYPE} -G"Unix Makefiles"
     - cd build
