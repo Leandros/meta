@@ -1,4 +1,4 @@
-# Meta
+# Meta <a href="https://ci.appveyor.com/project/Leandros/meta"><image src="https://ci.appveyor.com/api/projects/status/c23wea646bhtov50/branch/master" align="right"></a> <a href="https://travis-ci.org/Leandros/meta"><image src="https://travis-ci.org/Leandros/meta.svg?branch=master" align="right"></a>
 
 An exercise in exploring compile time code generation in C++.
 
@@ -16,7 +16,7 @@ An exercise in exploring compile time code generation in C++.
 
 To compile meta, you require the following:
 
-- [CMake 3.5 or higher](https://cmake.org/download/)
+- [CMake 3.2 or higher](https://cmake.org/download/)
 - A C++ compiler, with C++14 support or higher
 
 Currently explicitly supported are [clang](https://clang.llvm.org/) (windows, linux and mac),
