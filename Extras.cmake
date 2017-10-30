@@ -69,36 +69,51 @@ function(strip_suffix _src _dst)
 endfunction()
 
 
+## Export compiler flags
+###############################################################################
+function(export_all_flags _filename _target)
+  set(_include_directories "$<TARGET_PROPERTY:${_target},INCLUDE_DIRECTORIES>")
+  set(_compile_definitions "$<TARGET_PROPERTY:${_target},COMPILE_DEFINITIONS>")
+  set(_compile_flags "$<TARGET_PROPERTY:${_target},COMPILE_FLAGS>")
+  set(_compile_options "$<TARGET_PROPERTY:${_target},COMPILE_OPTIONS>")
+  set(_include_directories "$<$<BOOL:${_include_directories}>:-I$<JOIN:${_include_directories},\n-I>\n>")
+  set(_compile_definitions "$<$<BOOL:${_compile_definitions}>:-D$<JOIN:${_compile_definitions},\n-D>\n>")
+  set(_compile_flags "$<$<BOOL:${_compile_flags}>:$<JOIN:${_compile_flags},\n>\n>")
+  set(_compile_options "$<$<BOOL:${_compile_options}>:$<JOIN:${_compile_options},\n>\n>")
+  file(GENERATE OUTPUT "${_filename}" CONTENT "${_compile_definitions}${_include_directories}${_compile_flags}${_compile_options}\n")
+endfunction()
+
+
 ## Precompiled Headers
 ###############################################################################
 function(add_precompiled_header target headername)
-    # Compile the precompiled header object file
     strip_suffix("${headername}" filename)
     set(srcfile "${filename}.cpp")
-    set(pch_added FALSE)
+    set(objfile "${filename}.pch")
+    set(objpath "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${objfile}")
 
     # Append a property
     macro(append_property _filename _name _val)
         set_property(SOURCE ${_filename} APPEND PROPERTY ${_name} "${_val}")
     endmacro()
 
-    # Check whether the source file exists
-    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${srcfile}")
-        message(FATAL_ERROR "${srcfile} does not exist")
-    endif()
-
     if(IS_MSVC)
-        set(objfile "${filename}.pch")
-        set(objpath "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${objfile}")
+        # Check whether the source file exists
+        if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${srcfile}")
+            message(FATAL_ERROR "${srcfile} does not exist")
+        endif()
 
         # Raise the memory limit for PCHs
         target_compile_options(${target} PRIVATE /Zm200)
 
+        # Compile the precompiled header object file
+        target_sources(${target} PRIVATE ${srcfile})
+
+        # Iterate all sources
         get_target_property(sources ${target} SOURCES)
         foreach(source ${sources})
             set(flags "")
             if(source STREQUAL "${srcfile}")
-                set(pch_added TRUE)
                 set(flags "${flags} /Fp\"${objpath}\"")
                 set(flags "${flags} /Yc\"${headername}\"")
                 append_property(${source} COMPILE_FLAGS "${flags}")
@@ -117,26 +132,34 @@ function(add_precompiled_header target headername)
         endforeach()
 
     elseif(IS_CLANG OR IS_GCC)
+        get_filename_component(headerpath "${headername}" ABSOLUTE)
+
+        # Gather all flags
+        set(flagpath "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${target}.pch.flags")
+        export_all_flags("${flagpath}" ${target})
+        set(flags "@${flagpath}")
+
+        # Precompile the header
+        add_custom_command(
+            OUTPUT "${objpath}"
+            COMMAND "${CMAKE_CXX_COMPILER}" ${flags} -x c++-header -o "${objpath}" "${headerpath}"
+            DEPENDS ${headerpath} ${flagpath}
+            COMMENT "Precompiling ${headername} for ${target}")
+
+        # Iterate all sources
         get_target_property(sources ${target} SOURCES)
         foreach(source ${sources})
-            set(flags "")
-            if(source STREQUAL "${srcfile}")
-                set(pch_added TRUE)
-                set(flags "${flags} -x c++-header")
-                append_property("${source}" COMPILE_FLAGS "${flags}")
-            elseif(source MATCHES ".+(cpp|cxx|cc)")
-                set(flags "${flags} -include \"${headername}\"")
-                append_property("${source}" COMPILE_FLAGS "${flags}")
+            set(cxxflags "")
+            if(source MATCHES ".+(cpp|cxx|cc)")
+                set(cxxflags "${cxxflags} -include \"${headername}\"")
+                append_property(${source} COMPILE_FLAGS "${cxxflags}")
+                if(NOT ${CMAKE_GENERATOR} MATCHES "Visual Studio .*")
+                    append_property(${source} OBJECT_DEPENDS "${objpath}")
+                endif()
             endif()
         endforeach()
-
     else()
         message(FATAL_ERROR "Compiler does not support precompiled headers")
-    endif()
-
-    # Error Checking
-    if(NOT pch_added)
-        message(FATAL_ERROR "${srcfile} was not added to ${target}")
     endif()
 endfunction()
 

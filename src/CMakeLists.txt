@@ -29,7 +29,6 @@ include_directories(
 
 ### Main Executable
 add_executable(${meta_EXE_NAME}
-    stdafx.cpp
     main.cpp
 )
 
