@@ -66,7 +66,7 @@ install:
     - set CLANG_FILE="ext\cache\LLVM-5.0.0-win32.exe"
     - appveyor DownloadFile %CLANG_URL% -FileName %CLANG_FILE%
 
-    - set CLANG_URL="http://releases.llvm.org/LLVM-5.0.0-win64.exe"
+    - set CLANG_URL="http://releases.llvm.org/5.0.0/LLVM-5.0.0-win64.exe"
     - set CLANG_FILE="ext\cache\LLVM-5.0.0-win64.exe"
     - appveyor DownloadFile %CLANG_URL% -FileName %CLANG_FILE%
 
