@@ -107,7 +107,6 @@ flag("/Zc:rvalueCast")          # Enforce explicit type conversion
 flag("/volatile:iso")           # Do not treat volatile as atomic
 flag("/fp:except-")             # No floating point exceptions
 flag("/errorReport:prompt")     # Prompt for errors
-flag("/diagnostics:column")     # Output classic diagnostics
 flag("/FC")                     # Use full path in diagnostics
 flag("/permissive-")            # Enforce standard behavior
 flag("/Gw")                     # Put functions in it"s own sections
