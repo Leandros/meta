@@ -75,27 +75,31 @@ endif()
 
 ### Extract Archive.
 set(CLANG_FILE "${CLANG_LOCAL}")
-if(NOT EXISTS "${CLANG_DIR}")
+set(CLANG_TARGET "${CMAKE_BINARY_DIR}/${CLANG_DIR}")
+if(NOT EXISTS "${CLANG_TARGET}")
     message(STATUS "Extracting libclang v${CLANG_VERSION} ...")
     if(CLANG_FILE MATCHES ".+bz2")
-        execute_process(COMMAND tar -xjf "${CLANG_FILE}")
+        execute_process(COMMAND mkdir -p "${CLANG_TARGET}")
+        execute_process(COMMAND tar -xjf "${CLANG_FILE}" -C "${CLANG_TARGET}")
     elseif(CLANG_FILE MATCHES ".+xz")
-        execute_process(COMMAND tar -xJf "${CLANG_FILE}")
+        execute_process(COMMAND mkdir -p "${CLANG_TARGET}")
+        execute_process(COMMAND tar -xJf "${CLANG_FILE}" -C "${CLANG_TARGET}")
     elseif(CLANG_FILE MATCHES ".+exe")
         # Windows .exe archive requires extraction with 7Zip
         find_program(7Z_EXECUTABLE 7z PATHS [HKEY_LOCAL_MACHINE\\SOFTWARE\\7-Zip;Path])
         if(NOT 7Z_EXECUTABLE)
             message(FATAL_ERROR "7-Zip is required to extract windows archive")
         endif()
-        execute_process(COMMAND ${7Z_EXECUTABLE} x -o${CLANG_DIR} ${CLANG_FILE})
+        execute_process(COMMAND ${7Z_EXECUTABLE} x -o${CLANG_TARGET} ${CLANG_FILE})
     else()
-        execute_process(COMMAND tar -xzf "${CLANG_FILE}")
+        execute_process(COMMAND mkdir -p "${CLANG_TARGET}")
+        execute_process(COMMAND tar -xzf "${CLANG_FILE}" -C "${CLANG_TARGET}")
     endif()
 endif()
 
 ### Set path
-if(EXISTS "${CLANG_DIR}")
-    set(PATH_TO_LIBCLANG "${CMAKE_BINARY_DIR}/${CLANG_DIR}")
+if(EXISTS "${CLANG_TARGET}")
+    set(PATH_TO_LIBCLANG "${CLANG_TARGET}")
 endif()
 
 ### Libraries to link
