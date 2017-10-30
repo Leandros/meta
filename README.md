@@ -1,4 +1,4 @@
-# Meta <a href="https://ci.appveyor.com/project/Leandros/meta"><image src="https://ci.appveyor.com/api/projects/status/c23wea646bhtov50/branch/master" align="right"></a> <a href="https://travis-ci.org/Leandros/meta"><image src="https://travis-ci.org/Leandros/meta.svg?branch=master" align="right"></a>
+# Meta <a href="https://ci.appveyor.com/project/Leandros/meta"><image src="https://ci.appveyor.com/api/projects/status/c23wea646bhtov50/branch/master?svg=true" align="right"></a> <a href="https://travis-ci.org/Leandros/meta"><image src="https://travis-ci.org/Leandros/meta.svg?branch=master" align="right"></a>
 
 An exercise in exploring compile time code generation in C++.
 
