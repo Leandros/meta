@@ -55,7 +55,7 @@ flag("-std=c++11")                      # C++ standard
 flag("-fpic")                           # Position independent code
 flag("-fno-math-errno")                 # Math funcs never set errno
 flag("-fno-fast-math")                  # Disable fast-math
-flag("-fno-exceptions")                 # Disable exceptions
+#flag("-fno-exceptions")                 # Disable exceptions
 flag("-fno-rtti")                       # Disable RTTI
 flag("-freciprocal-math")               # Allow div to be optimized
 flag("-fstrict-enums")                  # Assume enums are always in range
