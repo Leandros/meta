@@ -29,6 +29,7 @@ include_directories(
 ### Main Executable
 add_executable(${meta_TEST_EXE}
     driver.cpp
+    parser.cpp
 )
 
 
@@ -36,4 +37,9 @@ add_executable(${meta_TEST_EXE}
 target_link_libraries(${meta_TEST_EXE}
     ${meta_LIB_NAME}
 )
+
+
+### Add CTest
+##############################################################################
+add_test(NAME Run COMMAND tests)
 

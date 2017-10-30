@@ -92,5 +92,5 @@ build:
 
 test_script:
     - cd build
-    - tests/tests.exe
+    - ctest -V -j 2 -C %CONFIGURATION%
 
