@@ -29,6 +29,7 @@ set(meta_VERSION_PATCH 0)
 
 ### Options
 option(BUILD_TESTS "Build the test suite" ON)
+option(ENABLE_LTO "Enable LTO in RELEASE builds" OFF)
 option(USE_UBSAN "Enable Undefined Behavior Sanitizer (clang only)" OFF)
 option(USE_UBSAN_MINIMAL "Enable minimal Undefined Behaviour Sanitizer (clang only)" OFF)
 option(USE_ADDRESSSAN "Enable Address Sanitizer (clang only)" OFF)

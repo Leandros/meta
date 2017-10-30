@@ -57,9 +57,11 @@ link_debugrelease("/OPT:REF,ICF")
 link_debugrelease("/INCREMENTAL:NO")
 
 link_release("/RELEASE")
-link_release("/LTCG")
 link_release("/OPT:REF,ICF")
-link_debugrelease("/INCREMENTAL:NO")
+link_release("/INCREMENTAL:NO")
+if(ENABLE_LTO)
+    link_release("/LTCG")
+endif()
 
 
 

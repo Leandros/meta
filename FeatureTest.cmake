@@ -21,10 +21,15 @@
 ### https://cmake.org/cmake/help/latest/manual/cmake-modules.7.html
 include(CheckFunctionExists)
 include(CheckSymbolExists)
+include(CheckCXXCompilerFlag)
 
 
 ### Check for functions (check_function_exists or check_symbol_exists)
 check_symbol_exists(snprintf "stdio.h;stdlib.h" HAVE_SNPRINTF)
+
+
+### Check for compiler flags
+check_cxx_compiler_flag(-fwhole-program-vtables HAVE_WHOLE_PROGRAM_VTABLES)
 
 
 ### Check System

@@ -68,6 +68,7 @@ flag("-fvisibility-ms-compat")          # Global func/var hidden by default
 flag_debug("-march=native")                     # Native architecture
 flag_debug("-fno-omit-frame-pointer")           # Improved debuggability
 flag_debug("-fstack-protector-all")             # Enable stack protector
+flag_debug("-UNDEBUG")                          # Enable asserts
 
 flag_debugrelease("-march=native")              # Native architecture
 flag_debugrelease("-flto=thin")                 # Enable LTO (thin)
@@ -76,9 +77,13 @@ flag_debugrelease("-fstack-protector-all")      # Enable stack protector
 flag_debugrelease("-UNDEBUG")                   # Enable asserts
 
 flag_release("-march=ivybridge")                # Set IvyBridge as earliest arch
-flag_release("-flto")                           # Enable LTO (full)
-flag_release("-fwhole-program-vtables")         # Enable whole program vtable opt
 flag_release("-fno-stack-protector")            # Disable stack protector
+if(ENABLE_LTO)
+    flag_release("-flto")                       # Enable LTO (full)
+    if(HAVE_WHOLE_PROGRAM_VTABLES)
+        flag_release("-fwhole-program-vtables") # Enable whole program vtable opt
+    endif()
+endif()
 
 ### Clang only flags
 if(IS_CLANG)
