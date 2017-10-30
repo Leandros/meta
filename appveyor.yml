@@ -26,6 +26,9 @@ init:
     # Set build version to git commit-hash
     - ps: Update-AppveyorBuild -Version "$($env:APPVEYOR_REPO_BRANCH) - $($env:APPVEYOR_REPO_COMMIT)"
 
+install:
+    - cinst 7zip
+
 platform:
     - Win32
     - x64
