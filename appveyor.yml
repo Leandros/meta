@@ -61,10 +61,14 @@ install:
 
     # Download libclang releases
     - cd C:\projects\meta
-    - set CLANG_WIN32=llvm-5.0.0-win32.exe
-    - set CLANG_WIN64=llvm-5.0.0-win64.exe
-    - curl -fsS -o ext/cache/%CLANG_WIN32% http://releases.llvm.org/%CLANG_WIN32%
-    - curl -fsS -o ext/cache/%CLANG_WIN64% http://releases.llvm.org/%CLANG_WIN64%
+
+    - set CLANG_URL="http://releases.llvm.org/llvm-5.0.0-win32.exe"
+    - set CLANG_FILE="ext\cache\llvm-5.0.0-win32.exe"
+    - appveyor DownloadFile %CLANG_URL% -FileName %CLANG_FILE%
+
+    - set CLANG_URL="http://releases.llvm.org/llvm-5.0.0-win64.exe"
+    - set CLANG_FILE="ext\cache\llvm-5.0.0-win64.exe"
+    - appveyor DownloadFile %CLANG_URL% -FileName %CLANG_FILE%
 
 platform:
     - Win32
