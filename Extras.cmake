@@ -143,7 +143,8 @@ function(add_precompiled_header target headername)
         add_custom_command(
             OUTPUT "${objpath}"
             COMMAND "${CMAKE_CXX_COMPILER}" ${flags} -x c++-header -o "${objpath}" "${headerpath}"
-            DEPENDS ${headerpath} ${flagpath}
+            DEPENDS ${headerpath}
+            BYPRODUCTS ${flagpath}
             COMMENT "Precompiling ${headername} for ${target}")
 
         # Iterate all sources
