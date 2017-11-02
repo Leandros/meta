@@ -16,11 +16,30 @@
 /* You should have received a copy of the GNU General Public License         */
 /* along with meta.  If not, see <http://www.gnu.org/licenses/>.             */
 /* ========================================================================= */
-#ifndef META_HPP
-#define META_HPP
+
+#ifndef A_ICONV_HXX
+#define A_ICONV_HXX
 #pragma once
+namespace a {
 
-int foo();
+#if defined(_WIN32)
+#include <a/win32/misc.h>
 
-#endif /* META_HPP */
+inline bool
+narrow(char *dst, wchar_t const *src, size_t size)
+{
+    return WideCharToMultiByte(65001, 0, src, -1, dst, (int)size, NULL, NULL);
+}
+
+inline bool
+widen(wchar_t *dst, char const *src, size_t size)
+{
+    return MultiByteToWideChar(65001, 0, src, -1, dst, (int)size);
+}
+
+#endif /* defined(_WIN32) */
+
+
+} /* namespace a */
+#endif /* A_ICONV_HXX */
 

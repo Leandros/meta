@@ -18,35 +18,40 @@
 ###############################################################################
 
 
+### Sources
+set(a_LIB_SOURCES)
+if(WIN32)
+    set(a_LIB_SOURCES
+        ${a_LIB_SOURCES}
+        windows/io.cxx
+    )
+endif()
+
+
 ### Include Directories
 include_directories(
     "${PROJECT_BINARY_DIR}"
-    "${PROJECT_SOURCE_DIR}/src"
     "${PROJECT_SOURCE_DIR}/include"
-    "${CLANG_INCLUDE_PATH}"
 )
 
 
 ### Main Executable
-add_executable(${meta_EXE_NAME}
-    main.cpp
+set(a_LIB_NAME "a" CACHE STRING "Name of 'a' library")
+add_library(${a_LIB_NAME} ${a_LIB_SOURCES})
+
+
+### Header Files
+set(a_LIB_HEADERS
+    "${PROJECT_SOURCE_DIR}/include/a/iconv.hxx"
+    "${PROJECT_SOURCE_DIR}/include/a/io.hxx"
+    "${PROJECT_SOURCE_DIR}/include/a/utilities.hxx"
 )
-
-### Precompiled header
-add_precompiled_header(${meta_EXE_NAME} stdafx.hpp FORCEINCLUDE)
-
-
-### Link Libraries
-target_link_libraries(${meta_EXE_NAME}
-    ${a_LIB_NAME}
-    ${meta_LIB_NAME}
-    ${CLANG_LIB_NAME}
-)
-
 
 
 ###############################################################################
 ## INSTALLATION
 ###############################################################################
-install(TARGETS ${meta_EXE_NAME} DESTINATION bin)
+install(TARGETS ${a_LIB_NAME} DESTINATION lib)
+install(FILES ${a_LIB_HEADERS} DESTINATION include)
+
 

@@ -80,6 +80,7 @@ include(ext/libclang.cmake)
 
 ### Executable & Libraries
 add_subdirectory(lib)
+add_subdirectory(lib/a)
 add_subdirectory(src)
 
 ### Tests

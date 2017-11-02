@@ -17,16 +17,23 @@
 ## along with meta.  If not, see <http://www.gnu.org/licenses/>.             ##
 ###############################################################################
 
+### Include Directories
+include_directories(
+    "${PROJECT_BINARY_DIR}"
+    "${PROJECT_SOURCE_DIR}/include"
+    "${CLANG_INCLUDE_PATH}"
+)
+
 
 ### Main Executable
 add_library(${meta_LIB_NAME}
-    lib.cpp
+    parser.cpp
 )
 
 
 ### Header Files
 set(meta_LIB_HEADERS
-    "${PROJECT_SOURCE_DIR}/include/meta/meta.hpp"
+    "${PROJECT_SOURCE_DIR}/include/meta/parser.hpp"
 )
 
 

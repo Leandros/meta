@@ -17,23 +17,37 @@
 /* along with meta.  If not, see <http://www.gnu.org/licenses/>.             */
 /* ========================================================================= */
 
+#include <a/io.hxx>
 #include <meta/config.h>
-#include <meta/meta.hpp>
 #include <meta/internal/clang.hpp>
 
 int
 main(void)
 {
-    clang::TLU tlu;
-    if (!tlu.init("test.h"))
+    a::process proc;
+
+    if (!proc.create("..\\LLVM-5.0.0-win64\\bin\\clang++.exe --version", "r"))
         return 1;
 
-    auto cb = [](clang::Cursor c, void *ctx)
-    {
-        printf("%s => %s\n",
-            c.name().c_str(), c.to_string().c_str());
-    };
-    tlu.visit(cb, nullptr);
+    char buf[4096];
+    size_t n;
+    while (proc.alive()) {
+        while ((n = proc.read(buf, 4096)) > 0) {
+            printf("%.*s", (int)n, buf);
+            fflush(stdout);
+        }
+    }
+
+    /* clang::TLU tlu; */
+    /* if (!tlu.init("test.h")) */
+    /*     return 1; */
+
+    /* auto cb = [](clang::Cursor c, void *ctx) */
+    /* { */
+    /*     printf("%s => %s\n", */
+    /*         c.name().c_str(), c.to_string().c_str()); */
+    /* }; */
+    /* tlu.visit(cb, nullptr); */
 
     return 0;
 }
