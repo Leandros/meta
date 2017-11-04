@@ -19,11 +19,13 @@
 
 #include <a/io.hxx>
 #include <meta/config.h>
+#include <meta/parser.hpp>
 #include <meta/internal/clang.hpp>
 
 int
 main(void)
 {
+#if 0
     a::process proc;
 
     if (!proc.create("..\\LLVM-5.0.0-win64\\bin\\clang++.exe --version", "r"))
@@ -37,17 +39,27 @@ main(void)
             fflush(stdout);
         }
     }
+#endif
 
-    /* clang::TLU tlu; */
-    /* if (!tlu.init("test.h")) */
-    /*     return 1; */
+    meta::parser p;
+    if (!p.init_from_file("test.h"))
+        return 1;
 
-    /* auto cb = [](clang::Cursor c, void *ctx) */
-    /* { */
-    /*     printf("%s => %s\n", */
-    /*         c.name().c_str(), c.to_string().c_str()); */
-    /* }; */
-    /* tlu.visit(cb, nullptr); */
+    p.run();
+
+
+#if 0
+    clang::TLU tlu;
+    if (!tlu.init("test.h"))
+        return 1;
+
+    auto cb = [](clang::Cursor c, void *ctx)
+    {
+        printf("%s => %s\n",
+            c.name().c_str(), c.to_string().c_str());
+    };
+    tlu.visit(cb, nullptr);
+#endif
 
     return 0;
 }

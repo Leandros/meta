@@ -35,13 +35,13 @@ namespace a {
 /* ========================================================================= */
 /* Cross-platform                                                            */
 /* ========================================================================= */
-#if A_USING(A_WINDOWS)
+#if USING(OS_WINDOWS)
     #define ftell64     _ftelli64
     typedef int64_t off_t;
-#elif A_USING(A_LINUX)
+#elif USING(OS_LINUX)
     #include <unistd.h>
     #define ftell64 ftello64
-#elif A_USING(A_MAC)
+#elif USING(OS_MAC)
     #include <unistd.h>
     #define ftell64 ftello
 #endif

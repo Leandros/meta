@@ -62,12 +62,17 @@ public:
      */
     bool init_from_buffer(char const *buffer, size_t nbytes);
 
+    /*!
+     * \brief Start the parsing
+     */
+    void run();
+
 
 /* Utilities: */
 private:
     char *next_token(char *s);
+    char *prev_token(char *s);
     bool match(char **s, char const *m);
-    bool cmp(char *s, char const *m);
     char *closing_bracket(char **s);
 
 /* Rules: */

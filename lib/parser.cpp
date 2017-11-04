@@ -26,6 +26,8 @@
 
 namespace meta {
 
+#define is_whitespace(x) (isspace((x)) || ((x) == '\r') || ((x) == '\n'))
+
 parser::~parser()
 {
     a::zfree(m_buf);
@@ -56,13 +58,33 @@ parser::init_from_buffer(char const *buffer, size_t nbytes)
 
 
 /* ========================================================================= */
+/* Member Functions                                                          */
+/* ========================================================================= */
+void
+parser::run()
+{
+    start();
+}
+
+
+/* ========================================================================= */
 /* Utilities                                                                 */
 /* ========================================================================= */
 char *
 parser::next_token(char *s)
 {
-    while (isspace(*s) || *s == '\r' || *s == '\n')
+    while (is_whitespace(*s))
         ++s;
+    return s;
+}
+
+char *
+parser::prev_token(char *s)
+{
+    while (is_whitespace(*s))
+        --s;
+    while (!is_whitespace(*s))
+        --s;
     return s;
 }
 
@@ -77,36 +99,29 @@ parser::match(char **s, char const *m)
     return *s = orig, false;
 }
 
-bool
-parser::cmp(char *s, char const *m)
-{
-    size_t l = strlen(m);
-    if (strncmp(s, m, l) == 0)
-        return true;
-    return false;
-}
-
 char *
 parser::closing_bracket(char **s)
 {
     int level = 1;
-    char *next, *orig;
+    char *next = *s;
 
-    orig = *s, next = *s;
-    do {
-        if (cmp(next, "{"))
+    while (1) {
+        if (match(&next, "{")) {
             level += 1;
-        else if (cmp(next, "}"))
+            continue;
+        } else if (match(&next, "}")) {
             level -= 1;
-        else if (level == 0)
+            continue;
+        } else if (level == 0) {
+            *s = next;
+            return next;
+        }
+
+        if (!empty_token(&next))
             break;
-    } while ((next = next_token(next))[0]);
+    }
 
-    if (!next[0])
-        return nullptr;
-
-    *s = next;
-    return next;
+    return nullptr;
 }
 
 
@@ -124,11 +139,15 @@ parser::start()
         orig = ptr;
         if ((r = constexpr_block(&ptr))) {
             use_constexpr_block(r);
+            continue;
         }
-
         ptr = orig;
+
+        /* Consume an empty token. */
         if (empty_token(&ptr))
-            /* yes */;
+            continue;
+        /* Stop once no tokens are available anymore. */
+        break;
     }
 }
 
@@ -136,9 +155,12 @@ parser::range
 parser::empty_token(char **s)
 {
     char *begin = *s;
-    char *end = next_token(*s);
-    *s = end;
-    return range(begin, end);
+    *s = next_token(*s);
+    if (**s == 0)
+        return {};
+    while (!is_whitespace(**s))
+        (*s)++;
+    return range(begin, *s);
 }
 
 parser::range
@@ -149,7 +171,7 @@ parser::constexpr_block(char **s)
      && match(s, "{")) {
         char *begin = next_token(*s);
         char *last = closing_bracket(s);
-        return range(begin, last);
+        return range(begin, prev_token(last));
     }
 
     *s = orig;
@@ -163,7 +185,8 @@ parser::constexpr_block(char **s)
 void
 parser::use_constexpr_block(range r)
 {
-    printf("use_constexpr_block()\n");
+    size_t len = r.end - r.begin;
+    printf("%.*s\n", (int)len, r.begin);
 }
 
 } /* namespace meta */
