@@ -88,7 +88,7 @@ rmdir(char const *path)
         return false;
     return RemoveDirectoryW(pathw);
 #else
-    return ::rmdir(path) == 0;
+    return rmdir(path) == 0;
 #endif
 }
 
