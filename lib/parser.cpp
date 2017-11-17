@@ -21,6 +21,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <a/io.hxx>
+#include <a/file.hxx>
 #include <a/utilities.hxx>
 #include <meta/parser.hpp>
 
@@ -41,7 +42,7 @@ parser::~parser()
 bool
 parser::init_from_file(char const *path)
 {
-    if ((m_buf = a::fbuf(path, &m_nbytes)) == nullptr)
+    if ((m_buf = a::file::read(path, &m_nbytes)) == nullptr)
         return false;
     return true;
 }

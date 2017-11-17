@@ -88,7 +88,7 @@ flag("/MT")
 ##############################################################################
 ## General
 ##############################################################################
-flag("/std:c++14")              # Enable C++14
+flag("/std:c++latest")          # Enable C++17
 flag("/utf-8")                  # Source is in utf-8
 flag("/MP12")                   # Use up to 12 cores
 flag("/FS")                     # Serialize writing PDBs

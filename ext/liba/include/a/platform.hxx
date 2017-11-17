@@ -1,23 +1,24 @@
 /* ========================================================================= */
 /* Copyright (C) 2017-2017 Arvid Gerstmann                                   */
 /*                                                                           */
-/* This file is part of meta.                                                */
+/* This file is part of liba.                                                */
 /*                                                                           */
-/* meta is free software: you can redistribute it and/or modify              */
+/* liba is free software: you can redistribute it and/or modify              */
 /* it under the terms of the GNU General Public License as published by      */
 /* the Free Software Foundation, either version 3 of the License, or         */
 /* (at your option) any later version.                                       */
 /*                                                                           */
-/* meta is distributed in the hope that it will be useful,                   */
+/* liba is distributed in the hope that it will be useful,                   */
 /* but WITHOUT ANY WARRANTY; without even the implied warranty of            */
 /* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             */
 /* GNU General Public License for more details.                              */
 /*                                                                           */
 /* You should have received a copy of the GNU General Public License         */
-/* along with meta.  If not, see <http://www.gnu.org/licenses/>.             */
+/* along with liba.  If not, see <http://www.gnu.org/licenses/>.             */
 /* ========================================================================= */
-#ifndef A_PLATFORM_HXX
-#define A_PLATFORM_HXX
+
+#ifndef LIBA_PLATFORM_HXX
+#define LIBA_PLATFORM_HXX
 #pragma once
 
 /* ========================================================================= */
@@ -170,5 +171,5 @@
     #define COMPILER_MSVC       ON
 #endif
 
-#endif /* A_PLATFORM_HXX */
+#endif /* LIBA_PLATFORM_HXX */
 

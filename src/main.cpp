@@ -18,9 +18,11 @@
 /* ========================================================================= */
 
 #include <a/io.hxx>
+#include <a/utilities.hxx>
 #include <meta/config.h>
 #include <meta/parser.hpp>
 #include <meta/internal/clang.hpp>
+#include <meta/internal/clang_driver.hpp>
 
 #define OPTPARSE_IMPLEMENTATION
 #define OPTPARSE_API static
@@ -30,7 +32,6 @@
 /* ========================================================================= */
 /* Options                                                                   */
 /* ========================================================================= */
-#define ARR_SIZE(x) (sizeof(x) / sizeof(x[0]))
 static struct optparse_long longopts[] = {
     /*
      * 1st arg is long option name. can be null.
@@ -96,6 +97,15 @@ main(int argc, char **argv)
         return 1;
     if (optind == argc)
         return fprintf(stderr, "error: requires file argument\n"), 1;
+
+
+    auto driver = clang::make_driver("..\\LLVM-5.0.0-win64");
+    if (!driver)
+        return 1;
+    a::buffer<char> buf = driver->preprocess(argv[optind]);
+    if (!buf)
+        return 1;
+    printf("%.*s\n", (int)buf.size(), buf.get());
 
 #if 0
     a::process proc;

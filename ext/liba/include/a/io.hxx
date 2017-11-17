@@ -1,24 +1,24 @@
 /* ========================================================================= */
 /* Copyright (C) 2017-2017 Arvid Gerstmann                                   */
 /*                                                                           */
-/* This file is part of meta.                                                */
+/* This file is part of liba.                                                */
 /*                                                                           */
-/* meta is free software: you can redistribute it and/or modify              */
+/* liba is free software: you can redistribute it and/or modify              */
 /* it under the terms of the GNU General Public License as published by      */
 /* the Free Software Foundation, either version 3 of the License, or         */
 /* (at your option) any later version.                                       */
 /*                                                                           */
-/* meta is distributed in the hope that it will be useful,                   */
+/* liba is distributed in the hope that it will be useful,                   */
 /* but WITHOUT ANY WARRANTY; without even the implied warranty of            */
 /* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             */
 /* GNU General Public License for more details.                              */
 /*                                                                           */
 /* You should have received a copy of the GNU General Public License         */
-/* along with meta.  If not, see <http://www.gnu.org/licenses/>.             */
+/* along with liba.  If not, see <http://www.gnu.org/licenses/>.             */
 /* ========================================================================= */
 
-#ifndef A_IO_HXX
-#define A_IO_HXX
+#ifndef LIBA_IO_HXX
+#define LIBA_IO_HXX
 #pragma once
 
 #include <stdlib.h>
@@ -92,21 +92,6 @@ private:
 };
 
 
-
-/* ========================================================================= */
-/* BUFFER                                                                    */
-/* ========================================================================= */
-
-/*!
- * \brief Read contents of \c path into a buffer.
- * \param[in] path Pointer to path. May not be NULL.
- * \param[out] nbytes Bytes read, without zero-terminator. May be NULL.
- * \return Pointer to allocated buffer, or nullptr on failure.
- * \remark Buffer must be freed with free().
- */
-char *fbuf(char const *path, size_t *nbytes = nullptr);
-
-
 } /* namespace a */
-#endif /* A_IO_HXX */
+#endif /* LIBA_IO_HXX */
 

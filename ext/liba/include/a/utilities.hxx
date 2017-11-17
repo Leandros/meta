@@ -1,31 +1,37 @@
 /* ========================================================================= */
 /* Copyright (C) 2017-2017 Arvid Gerstmann                                   */
 /*                                                                           */
-/* This file is part of meta.                                                */
+/* This file is part of liba.                                                */
 /*                                                                           */
-/* meta is free software: you can redistribute it and/or modify              */
+/* liba is free software: you can redistribute it and/or modify              */
 /* it under the terms of the GNU General Public License as published by      */
 /* the Free Software Foundation, either version 3 of the License, or         */
 /* (at your option) any later version.                                       */
 /*                                                                           */
-/* meta is distributed in the hope that it will be useful,                   */
+/* liba is distributed in the hope that it will be useful,                   */
 /* but WITHOUT ANY WARRANTY; without even the implied warranty of            */
 /* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             */
 /* GNU General Public License for more details.                              */
 /*                                                                           */
 /* You should have received a copy of the GNU General Public License         */
-/* along with meta.  If not, see <http://www.gnu.org/licenses/>.             */
+/* along with liba.  If not, see <http://www.gnu.org/licenses/>.             */
 /* ========================================================================= */
 
-#ifndef A_UTILITIES_HXX
-#define A_UTILITIES_HXX
+#ifndef LIBA_UTILITIES_HXX
+#define LIBA_UTILITIES_HXX
 #pragma once
 
 #include <new>
 #include <stdarg.h>
 #include <stdio.h>
+#include <a/platform.hxx>
 namespace a {
 
+/*!
+ * \def ARR_SIZE
+ * \brief
+ */
+#define ARR_SIZE(x) (sizeof(x) / sizeof(x[0]))
 
 /*!
  * \def Auto
@@ -48,6 +54,21 @@ public:
     A_Auto_INTERNAL1(A_TOKEN_PASTE(Auto_func_, ctr), \
                    A_TOKEN_PASTE(Auto_instance_, ctr), __VA_ARGS__)
 #define Auto(...) A_Auto_INTERNAL2(__COUNTER__, __VA_ARGS__)
+
+
+/*!
+ * \def PATH_SEPARATOR
+ * \brief
+ */
+#if USING(OS_WINDOWS)
+    #ifndef PATH_SEPARATOR
+        #define PATH_SEPARATOR '\\'
+    #endif
+#else
+    #ifndef PATH_SEPARATOR
+        #define PATH_SEPARATOR '/'
+    #endif
+#endif
 
 
 /*!
@@ -89,5 +110,5 @@ zfree(T const *ptr)
 }
 
 } /* namespace a */
-#endif /* A_UTILITIES_HXX */
+#endif /* LIBA_UTILITIES_HXX */
 

@@ -23,6 +23,7 @@ include_directories(
     "${PROJECT_BINARY_DIR}"
     "${PROJECT_SOURCE_DIR}/src"
     "${PROJECT_SOURCE_DIR}/include"
+    "${PROJECT_SOURCE_DIR}/ext/liba/include"
     "${CLANG_INCLUDE_PATH}"
 )
 
@@ -33,7 +34,7 @@ add_executable(${meta_EXE_NAME}
 )
 
 ### Precompiled header
-add_precompiled_header(${meta_EXE_NAME} stdafx.hpp FORCEINCLUDE)
+add_precompiled_header(${meta_EXE_NAME} stdafx.hpp stdafx.cpp FORCEINCLUDE)
 
 
 ### Link Libraries

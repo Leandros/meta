@@ -86,9 +86,8 @@ endfunction()
 
 ## Precompiled Headers
 ###############################################################################
-function(add_precompiled_header target headername)
+function(add_precompiled_header target headername srcfile)
     strip_suffix("${headername}" filename)
-    set(srcfile "${filename}.cpp")
     set(objfile "${filename}.pch")
     set(objpath "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${objfile}")
 

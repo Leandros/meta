@@ -21,6 +21,7 @@
 include_directories(
     "${PROJECT_BINARY_DIR}"
     "${PROJECT_SOURCE_DIR}/include"
+    "${PROJECT_SOURCE_DIR}/ext/liba/include"
     "${CLANG_INCLUDE_PATH}"
 )
 

@@ -76,11 +76,11 @@ configure_file(
 
 ### External libraries
 include(ext/libclang.cmake)
+add_subdirectory(ext/liba)
 
 
 ### Executable & Libraries
 add_subdirectory(lib)
-add_subdirectory(lib/a)
 add_subdirectory(src)
 
 ### Tests

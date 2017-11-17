@@ -1,20 +1,20 @@
 /* ========================================================================= */
 /* Copyright (C) 2017-2017 Arvid Gerstmann                                   */
 /*                                                                           */
-/* This file is part of meta.                                                */
+/* This file is part of liba.                                                */
 /*                                                                           */
-/* meta is free software: you can redistribute it and/or modify              */
+/* liba is free software: you can redistribute it and/or modify              */
 /* it under the terms of the GNU General Public License as published by      */
 /* the Free Software Foundation, either version 3 of the License, or         */
 /* (at your option) any later version.                                       */
 /*                                                                           */
-/* meta is distributed in the hope that it will be useful,                   */
+/* liba is distributed in the hope that it will be useful,                   */
 /* but WITHOUT ANY WARRANTY; without even the implied warranty of            */
 /* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             */
 /* GNU General Public License for more details.                              */
 /*                                                                           */
 /* You should have received a copy of the GNU General Public License         */
-/* along with meta.  If not, see <http://www.gnu.org/licenses/>.             */
+/* along with liba.  If not, see <http://www.gnu.org/licenses/>.             */
 /* ========================================================================= */
 
 #include <stdio.h>
@@ -31,20 +31,6 @@
 #include <a/utilities.hxx>
 
 namespace a {
-
-/* ========================================================================= */
-/* Cross-platform                                                            */
-/* ========================================================================= */
-#if USING(OS_WINDOWS)
-    #define ftell64     _ftelli64
-    typedef int64_t off_t;
-#elif USING(OS_LINUX)
-    #include <unistd.h>
-    #define ftell64 ftello64
-#elif USING(OS_MAC)
-    #include <unistd.h>
-    #define ftell64 ftello
-#endif
 
 
 /* ========================================================================= */
@@ -309,46 +295,6 @@ process::wait()
         CloseHandle(m_impl->out_w), m_impl->out_w = NULL;
 
     return m_impl->exitcode;
-}
-
-
-
-/* ========================================================================= */
-/* BUFFER                                                                    */
-/* ========================================================================= */
-char *
-fbuf(char const *path, size_t *nbytes)
-{
-    FILE *fh;
-    off_t off;
-    size_t n, m;
-    char buf[4096];
-    if ((fh = fopen(path, "rb")) == NULL)
-        return NULL;
-
-    if (fseek(fh, 0, SEEK_END))
-        goto e0;
-    if ((off = ftell64(fh)) == -1L)
-        goto e0;
-    if (fseek(fh, 0, SEEK_SET))
-        goto e0;
-
-    char *ret;
-    if ((ret = zalloc<char>((size_t)off + 1)) == NULL)
-        goto e0;
-
-    n = 0;
-    while ((m = fread(buf, 1, 4096, fh)) != 0)
-        memcpy(ret + n, buf, m), n += m;
-    ret[n] = '\0';
-    if (nbytes) *nbytes = n;
-
-    if (fclose(fh))
-        zfree(ret), ret = nullptr;
-    return ret;
-
-e0: fclose(fh);
-    return nullptr;
 }
 
 } /* namespace a */
