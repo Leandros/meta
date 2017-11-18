@@ -16,6 +16,7 @@
 /* You should have received a copy of the GNU General Public License         */
 /* along with meta.  If not, see <http://www.gnu.org/licenses/>.             */
 /* ========================================================================= */
+
 #ifndef CLANG_DRIVER
 #define CLANG_DRIVER
 #pragma once
@@ -28,7 +29,9 @@
 #include <a/utilities.hxx>
 #include <a/tl/optional.hpp>
 
-namespace clang {
+
+namespace clang
+{
 
 /* ========================================================================= */
 /* CLANG.EXE driver                                                          */
@@ -65,6 +68,12 @@ public:
         return true;
     }
 
+    /*!
+     * \brief
+     * \param[in] args
+     * \param[in] nargs
+     * \return
+     */
     inline a::buffer<char>
     invoke(char const **args, size_t nargs)
     {
@@ -91,6 +100,12 @@ public:
         return builder.to_buffer();
     }
 
+    /*!
+     * \brief
+     * \param[in]
+     * \return
+     * \remark Will call \c invoke internally, with the right flags.
+     */
     inline a::buffer<char>
     preprocess(char const *path)
     {

@@ -150,7 +150,6 @@ public:
     append(char const *buf, size_t nbytes)
     {
         assert(nbytes < (0x1 << 31) && "nbytes may not be larger than 4 GiB");
-        dlog("-- 0\n");
 
         /* Alloc first node. */
         if (m_first == nullptr) {
@@ -162,7 +161,6 @@ public:
             m_first->next = nullptr;
             m_first->full = uint32_t(size);
             m_first->left = uint32_t(size - nbytes);
-            dlog("size = %lld | nbytes = %lld\n", size, nbytes);
             memcpy(m_first->buf, buf, nbytes);
         } else {
 
@@ -173,18 +171,11 @@ public:
                 memcpy(m_last->buf + offset, buf, nbytes);
             } else {
 
-                dlog("-- 1\n");
                 size_t left = nbytes;
-                dlog("left = %lld\n", left);
-                dlog("-- 2\n");
                 for (node *cur = m_last; left > 0 && cur != nullptr; cur = cur->next) {
-                    size_t const offset = cur->full - cur->left;
-                    size_t const size = nbytes - cur->left;
-                    dlog("offset = %lld\n", offset);
-                    dlog("size = %lld\n", size);
-                    if (size > 0) {
-                        size_t const len = std::min(size, left);
-                        dlog("len = %lld\n", len);
+                    if (cur->left > 0) {
+                        size_t const len = std::min(size_t(cur->left), left);
+                        size_t const offset = cur->full - cur->left;
                         memcpy(cur->buf + offset, buf + (nbytes - left), len);
                         left -= len;
                         cur->left -= uint32_t(len);
@@ -192,8 +183,6 @@ public:
                     m_last = cur;
                 }
 
-                dlog("-- 3\n");
-                dlog("left = %lld\n", left);
                 /* If we still have bytes over, alloc a new node. */
                 if (left > 0) {
                     size_t const newsize = left < MIN_SIZE ? MIN_SIZE : left;
@@ -212,7 +201,6 @@ public:
             }
         }
 
-        dlog("-- OUT\n");
         m_len += nbytes;
         return nbytes;
     }

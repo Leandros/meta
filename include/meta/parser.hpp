@@ -22,11 +22,16 @@
 #pragma once
 
 #include <stddef.h>
+#include <a/buffer.hxx>
 
 
-namespace meta {
+namespace meta
+{
 
 
+/* ========================================================================= */
+/* PARSER                                                                    */
+/* ========================================================================= */
 class parser
 {
     struct range {
@@ -61,6 +66,17 @@ public:
      * \remark The parser will \b NOT take ownership!
      */
     bool init_from_buffer(char const *buffer, size_t nbytes);
+
+    /*!
+     * \brief See \c init_from_buffer
+     * \param[in] buf Initialized buffer.
+     * \return See \c init_from_buffer
+     */
+    inline bool
+    init_from_buffer(a::buffer<char> &buf)
+    {
+        return init_from_buffer(buf.get(), buf.size());
+    }
 
     /*!
      * \brief Start the parsing

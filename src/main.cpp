@@ -58,7 +58,7 @@ static void print_version(char const *name);
 static void add_include(char const *path);
 
 static int
-parseOptions(int, char **argv)
+parse_options(int, char **argv)
 {
     int option, index;
     struct optparse options;
@@ -93,39 +93,24 @@ int
 main(int argc, char **argv)
 {
     int optind;
-    if ((optind = parseOptions(argc, argv)) == -1)
+    if ((optind = parse_options(argc, argv)) == -1)
         return 1;
     if (optind == argc)
         return fprintf(stderr, "error: requires file argument\n"), 1;
 
-
     auto driver = clang::make_driver("..\\LLVM-5.0.0-win64");
     if (!driver)
         return 1;
-    a::buffer<char> buf = driver->preprocess(argv[optind]);
-    if (!buf)
-        return 1;
-    printf("%.*s\n", (int)buf.size(), buf.get());
-
-#if 0
-    a::process proc;
-
-    if (!proc.create("..\\LLVM-5.0.0-win64\\bin\\clang++.exe --version", "r"))
-        return 1;
-
-    char buf[4096];
-    size_t n;
-    while (proc.alive()) {
-        while ((n = proc.read(buf, 4096)) > 0) {
-            printf("%.*s", (int)n, buf);
-            fflush(stdout);
-        }
-    }
-#endif
 
     for (int i = optind; i < argc; ++i) {
+        /* ==== Preprocess ==== */
+        a::buffer<char> buf = driver->preprocess(argv[i]);
+        if (!buf)
+            return 1;
+
+        /* ==== Parse the internal programs ==== */
         meta::parser p;
-        if (!p.init_from_file(argv[i]))
+        if (!p.init_from_buffer(buf))
             return 1;
         p.run();
     }
