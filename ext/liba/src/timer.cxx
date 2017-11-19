@@ -19,6 +19,7 @@
 
 #include <a/timer.hxx>
 #include <string.h>
+#include <assert.h>
 
 #if USING(OS_WINDOWS)
     #include <a/win32/misc.h>

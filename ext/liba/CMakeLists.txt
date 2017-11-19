@@ -24,7 +24,8 @@ set(a_LIB_NAME "a" CACHE STRING "Name of 'a' library")
 
 ### Sources
 set(a_LIB_SOURCES
-    src/file.cxx)
+    src/file.cxx
+    src/timer.cxx)
 
 if(WIN32)
     set(a_LIB_SOURCES

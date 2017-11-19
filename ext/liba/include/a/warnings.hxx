@@ -45,15 +45,15 @@
  * \param mopt MSVC warning code
  * \brief Re-enable a temporarily disabled warning.
  */
-#define A_CONCAT1(s) #s
-#define A_CONCAT(x, y) A_CONCAT1(x ## y)
+#define A_WARN_CONCAT_STR(s) #s
+#define A_WARN_CONCAT(x, y) A_WARN_CONCAT_STR(x ## y)
 
 #if USING(COMPILER_MSVC)
     #define A_DO_PRAGMA(x) __pragma (x)
     #define A_PRAGMA(cc, x) A_DO_PRAGMA(warning(x))
 #else
     #define A_DO_PRAGMA(x) _Pragma (#x)
-    #define A_PRAGMA(cc,x) A_DO_PRAGMA(cc diagnostic x)
+    #define A_PRAGMA(cc, x) A_DO_PRAGMA(cc diagnostic x)
 #endif
 
 #if USING(COMPILER_MSVC)
@@ -63,13 +63,13 @@
         A_PRAGMA(msvc, pop)
 #elif USING(COMPILER_CLANG)
     #define DISABLE_WARNING(gopt, copt, mopt) \
-        A_PRAGMA(clang, push) A_PRAGMA(clang, ignored A_CONCAT(-W, copt))
+        A_PRAGMA(clang, push) A_PRAGMA(clang, ignored A_WARN_CONCAT(-W, copt))
     #define ENABLE_WARNING(gopt, copt, mopt) \
         A_PRAGMA(clang, pop)
 #elif USING(COMPILER_GCC)
     #if ((__GNUC__ * 100) + __GNUC_MINOR__) >= 406
         #define DISABLE_WARNING(gopt, copt, mopt) \
-            A_PRAGMA(GCC,push) A_PRAGMA(GCC,ignored A_CONCAT(-W, gopt))
+            A_PRAGMA(GCC,push) A_PRAGMA(GCC,ignored A_WARN_CONCAT(-W, gopt))
         #define ENABLE_WARNING(gopt, copt, mopt) \
             A_PRAGMA(GCC, pop)
     #else
@@ -82,11 +82,6 @@
     #define DISABLE_WARNING(gopt, copt, mopt)
     #define ENABLE_WARNING(gopt, copt, mopt)
 #endif
-
-#undef A_CONCAT1
-#undef A_CONCAT
-#undef A_DO_PRAGMA
-#undef A_PRAGMA
 
 
 
