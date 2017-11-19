@@ -25,13 +25,161 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <a/platform.hxx>
+#include <a/warnings.hxx>
 namespace a {
 
+
+/* ========================================================================= */
+/* Compiler Specifics                                                        */
+/* ========================================================================= */
+/*!
+ * \def THREAD_LOCAL
+ * \brief Specify a thread local variable.
+ */
+#ifndef THREAD_LOCAL
+    #if USING(COMPILER_MSVC)
+        #define THREAD_LOCAL __declspec(thread)
+    #elif USING(COMPILER_GCC) || USING(COMPILER_CLANG)
+        #define THREAD_LOCAL __thread
+    #elif __cplusplus >= 201103L
+        #define THREAD_LOCAL thread_local
+    #else
+        #define THREAD_LOCAL
+    #endif
+#endif
+
+
+/*!
+ * \def OPTIMIZE_OFF
+ * \def OPTIMIZE_ON
+ * \brief Disable optimizations on the fly.
+ */
+#if !defined(OPTIMIZE_OFF) && !defined(OPTIMIZE_ON)
+    #if USING(COMPILER_MSVC)
+        #define OPTIMIZE_OFF    __pragma(optimize("", off))
+        #define OPTIMIZE_ON     __pragma(optimize("", on))
+    #elif USING(COMPILER_CLANG)
+        #define OPTIMIZE_OFF    _Pragma("clang optimize off")
+        #define OPTIMIZE_ON     _Pragma("clang optimize on")
+    #elif USING(COMPILER_GCC)
+        #define OPTIMIZE_OFF    _Pragma("GCC optimize (\"O0\")")
+        #define OPTIMIZE_ON     _Pragma("GCC reset_options")
+    #else
+        #define OPTIMIZE_OFF
+        #define OPTIMIZE_ON
+    #endif
+#endif
+
+
+/*!
+ * \def NOINLINE
+ * \brief Disable inlining.
+ */
+#if !defined(NOINLINE)
+    #if USING(COMPILER_MSVC)
+        #define NOINLINE __declspec(noinline)
+    #elif USING(COMPILER_CLANG) || USING(COMPILER_GCC)
+        #define NOINLINE __attribute__((noinline))
+    #else
+        #define NOINLINE
+    #endif
+#endif
+
+
+/*!
+ * \def FORCEINLINE
+ * \brief Force Inlining, at all costs.
+ */
+#if !defined(FORCEINLINE)
+    #if USING(COMPILER_MSVC)
+        #define FORCEINLINE inline __forceinline
+    #elif USING(COMPILER_CLANG) || USING(COMPILER_GCC)
+        #define FORCEINLINE inline __attribute__((always_inline))
+    #else
+        #define FORCEINLINE inline
+    #endif
+#endif
+
+
+/*!
+ * \def likely
+ * \def unlikely
+ * \brief Likely/Unlikely branches
+ */
+#if !defined(likely) && !defined(unlikely)
+    #if USING(COMPILER_CLANG) || USING(COMPILER_GCC)
+        #define likely(x) __builtin_expect ((x), 1)
+        #define unlikely(x) __builtin_expect ((x), 0)
+    #else
+        #define likely(x) (x)
+        #define unlikely(x) (x)
+    #endif
+#endif
+
+
+/*!
+ * \def NORETURN
+ * \brief Marke a branch as unable to return from.
+ */
+#ifndef NORETURN
+    #if USING(COMPILER_MSVC)
+        #define NORETURN __declspec(noreturn)
+    #elif USING(COMPILER_CLANG) || USING(COMPILER_GCC)
+        #define NORETURN __attribute__((noreturn))
+    #else
+        #define NORETURN
+    #endif
+#endif
+
+
+/*!
+ * \def UNREACHABLE
+ * \brief Unreachable code.
+ */
+#ifndef UNREACHABLE
+    #if USING(COMPILER_MSVC)
+        DISABLE_WARNING(invalid-noreturn,invalid-noreturn,4645)
+        __declspec(noreturn) static void
+        __custom_unreachable()
+        {
+            return;
+        }
+        ENABLE_WARNING(invalid-noreturn,invalid-noreturn,4645)
+
+        #define UNREACHABLE __custom_unreachable()
+    #elif USING(COMPILER_CLANG) || USING(COMPILER_GCC)
+        #define UNREACHABLE __builtin_unreachable()
+    #else
+        #define UNREACHABLE
+    #endif
+#endif
+
+
+
+/* ========================================================================= */
+/* Utilities                                                                 */
+/* ========================================================================= */
 /*!
  * \def ARR_SIZE
  * \brief
  */
 #define ARR_SIZE(x) (sizeof(x) / sizeof(x[0]))
+
+
+/*!
+ * \def PATH_SEPARATOR
+ * \brief
+ */
+#if USING(OS_WINDOWS)
+    #ifndef PATH_SEPARATOR
+        #define PATH_SEPARATOR '\\'
+    #endif
+#else
+    #ifndef PATH_SEPARATOR
+        #define PATH_SEPARATOR '/'
+    #endif
+#endif
+
 
 /*!
  * \def Auto
@@ -54,21 +202,6 @@ public:
     A_Auto_INTERNAL1(A_TOKEN_PASTE(Auto_func_, ctr), \
                    A_TOKEN_PASTE(Auto_instance_, ctr), __VA_ARGS__)
 #define Auto(...) A_Auto_INTERNAL2(__COUNTER__, __VA_ARGS__)
-
-
-/*!
- * \def PATH_SEPARATOR
- * \brief
- */
-#if USING(OS_WINDOWS)
-    #ifndef PATH_SEPARATOR
-        #define PATH_SEPARATOR '\\'
-    #endif
-#else
-    #ifndef PATH_SEPARATOR
-        #define PATH_SEPARATOR '/'
-    #endif
-#endif
 
 
 /*!
@@ -109,6 +242,8 @@ zfree(T const *ptr)
     delete[] ptr;
 }
 
+
 } /* namespace a */
+
 #endif /* LIBA_UTILITIES_HXX */
 
