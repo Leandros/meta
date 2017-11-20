@@ -21,18 +21,16 @@
 #include <a/buffer.hxx>
 #include <meta/transform.hpp>
 
-#define CODE(s) #s
+static char const *code_before =
+"    #include <stdio.h>\n"
+"    int\n"
+"    main(int argc, char **argv)\n"
+"    {\n"
+;
 
-static char const *code_before = CODE(
-    #include <stdio.h>
-    int
-    main(int argc, char **argv)
-    {
-);
-
-static char const *code_after = CODE(
-    }
-);
+static char const *code_after =
+"    }\n"
+;
 
 namespace meta
 {
