@@ -82,8 +82,6 @@ public:
         for (size_t i = 0; i < nargs; ++i)
             str.append_format(" %s", args[i]);
 
-        printf("%s\n", str.get());
-
         a::buffer_builder<char> builder;
         a::process proc;
         if (!proc.create(str.get(), "r"))

@@ -24,6 +24,7 @@
 #include <a/file.hxx>
 #include <a/utilities.hxx>
 #include <meta/parser.hpp>
+#include <meta/transform.hpp>
 
 namespace meta {
 
@@ -134,7 +135,7 @@ parser::start()
 {
     char *ptr = m_buf;
     char *orig;
-    range r;
+    a::range<char> r;
 
     while (1) {
         orig = ptr;
@@ -152,7 +153,7 @@ parser::start()
     }
 }
 
-parser::range
+a::range<char>
 parser::empty_token(char **s)
 {
     char *begin = *s;
@@ -161,10 +162,10 @@ parser::empty_token(char **s)
         return {};
     while (!is_whitespace(**s))
         (*s)++;
-    return range(begin, *s);
+    return a::range<char>(begin, *s);
 }
 
-parser::range
+a::range<char>
 parser::constexpr_block(char **s)
 {
     char *orig = *s;
@@ -172,7 +173,7 @@ parser::constexpr_block(char **s)
      && match(s, "{")) {
         char *begin = next_token(*s);
         char *last = closing_bracket(s);
-        return range(begin, prev_token(last));
+        return a::range<char>(begin, prev_token(last));
     }
 
     *s = orig;
@@ -184,10 +185,11 @@ parser::constexpr_block(char **s)
 /* Execution                                                                 */
 /* ========================================================================= */
 void
-parser::use_constexpr_block(range r)
+parser::use_constexpr_block(a::range<char> r)
 {
-    size_t len = r.end - r.begin;
-    printf("%.*s\n", (int)len, r.begin);
+    transform t;
+    if (!t.init(r))
+        return;
 }
 
 } /* namespace meta */

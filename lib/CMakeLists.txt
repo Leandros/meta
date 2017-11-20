@@ -29,6 +29,7 @@ include_directories(
 ### Main Executable
 add_library(${meta_LIB_NAME}
     parser.cpp
+    transform.cpp
 )
 
 

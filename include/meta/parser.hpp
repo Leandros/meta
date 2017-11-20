@@ -23,6 +23,7 @@
 
 #include <stddef.h>
 #include <a/buffer.hxx>
+#include <a/range.hxx>
 
 
 namespace meta
@@ -34,19 +35,6 @@ namespace meta
 /* ========================================================================= */
 class parser
 {
-    struct range {
-        char *begin, *end;
-        inline range()
-            : begin(nullptr), end(nullptr) {}
-        inline range(char *_begin, char *_end)
-            : begin(_begin), end(_end) {}
-
-        explicit inline operator bool()
-        {
-            return begin && end;
-        }
-    };
-
 public:
     inline parser() {}
     ~parser();
@@ -94,12 +82,12 @@ private:
 /* Rules: */
 private:
     void start();
-    range empty_token(char **s);
-    range constexpr_block(char **s);
+    a::range<char> empty_token(char **s);
+    a::range<char> constexpr_block(char **s);
 
 /* Excution: */
 private:
-    void use_constexpr_block(range r);
+    void use_constexpr_block(a::range<char> r);
 
 private:
     char *m_buf = nullptr;
