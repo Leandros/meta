@@ -17,37 +17,14 @@
 /* along with meta.  If not, see <http://www.gnu.org/licenses/>.             */
 /* ========================================================================= */
 
-#include <stdio.h>
-#include <a/buffer.hxx>
-#include <meta/transform.hpp>
-
-namespace meta
+char const *
+get_num(int x)
 {
-
-static char const *code_before =
-"    #include <stdio.h>\n"
-"    int main(int argc, char **argv)\n"
-"    {\n"
-;
-
-static char const *code_after =
-"    }\n"
-;
-
-a::err_code
-transform::init(a::range<char> const &range)
-{
-
-    a::buffer_builder<char> builder;
-    builder.append(code_before, strlen(code_before));
-    builder.append(range.begin(), range.size());
-    builder.append(code_after, strlen(code_after));
-    a::buffer<char> buf = builder.to_buffer();
-    printf("%s\n", buf.get());
-
-    return true;
+    switch {
+    constexpr {
+        for (int i = 0; i < 10; ++i)
+            -> { case i: return $toString(i); }
+    }
+    default: return "<unknown>";
+    }
 }
-
-
-} /* namespace meta */
-

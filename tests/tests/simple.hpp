@@ -22,9 +22,9 @@ get_num(int x)
 {
     switch {
     constexpr {
-        for (int i = 0; i < 10; ++i)
-            -> { case i: return $toString(i); }
+        -> { case 0: return "0"; }
     }
     default: return "<unknown>";
     }
 }
+
