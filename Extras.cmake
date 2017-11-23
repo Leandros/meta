@@ -137,11 +137,15 @@ function(add_precompiled_header target headername srcfile)
         set(flagpath "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${target}.pch.flags")
         export_all_flags("${flagpath}" ${target})
         set(flags "@${flagpath}")
+        get_target_property(standard ${target} CXX_STANDARD)
+        if(NOT standard)
+            set(standard 14)
+        endif()
 
         # Precompile the header
         add_custom_command(
             OUTPUT "${objpath}"
-            COMMAND "${CMAKE_CXX_COMPILER}" ${flags} -x c++-header -o "${objpath}" "${headerpath}"
+            COMMAND "${CMAKE_CXX_COMPILER}" ${flags} -std=c++${standard} -x c++-header -o "${objpath}" "${headerpath}"
             DEPENDS ${headerpath}
             BYPRODUCTS ${flagpath}
             COMMENT "Precompiling ${headername} for ${target}")

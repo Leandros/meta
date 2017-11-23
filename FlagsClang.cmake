@@ -51,7 +51,7 @@ endif()
 ##############################################################################
 ## Optimizations
 ##############################################################################
-flag("-std=c++11")                      # C++ standard
+flag("-std=c++14")                      # C++ standard
 flag("-fpic")                           # Position independent code
 flag("-fno-math-errno")                 # Math funcs never set errno
 flag("-fno-fast-math")                  # Disable fast-math

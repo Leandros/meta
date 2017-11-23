@@ -34,6 +34,13 @@ if(WIN32)
     )
 endif()
 
+if(UNIX)
+    set(a_LIB_SOURCES
+        ${a_LIB_SOURCES}
+        src/posix/io.cxx
+    )
+endif()
+
 
 ### Include Directories
 include_directories(

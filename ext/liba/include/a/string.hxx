@@ -54,7 +54,7 @@ public:
         return m_str + m_pos;
     }
 
-    PRINTF_DIAG(1, 2) inline char const *
+    PRINTF_DIAG(2, 3) inline char const *
     append_format(char const *fmt, ...)
     {
         va_list args;

@@ -48,3 +48,5 @@ _out/
 # Logfiles
 *.log
 
+# MacOS
+.DS_Store

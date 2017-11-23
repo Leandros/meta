@@ -88,7 +88,7 @@ public:
 
 
 private:
-    pctx *m_impl = nullptr;
+    struct pctx *m_impl = nullptr;
 };
 
 
