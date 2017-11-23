@@ -149,7 +149,7 @@ public:
     inline size_t
     append(char const *buf, size_t nbytes)
     {
-        assert(nbytes < (0x1 << 31) && "nbytes may not be larger than 4 GiB");
+        assert(nbytes < (0x1U << 31U) && "nbytes may not be larger than 4 GiB");
 
         /* Alloc first node. */
         if (m_first == nullptr) {

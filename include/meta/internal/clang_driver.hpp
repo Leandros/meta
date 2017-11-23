@@ -26,6 +26,7 @@
 #include <a/error.hxx>
 #include <a/string.hxx>
 #include <a/buffer.hxx>
+#include <a/platform.hxx>
 #include <a/utilities.hxx>
 #include <a/tl/optional.hpp>
 
@@ -39,6 +40,12 @@ namespace clang
 class driver
 {
     friend tl::optional<driver> make_driver(char const *);
+#if USING(OS_WINDOWS)
+    static constexpr char const *CLANG_EXE = "clang++.exe";
+#elif USING(OS_MAC)
+    static constexpr char const *CLANG_EXE = "clang++";
+#endif
+
 
 public:
     /* ===================================================================== */
@@ -78,7 +85,8 @@ public:
     invoke(char const **args, size_t nargs)
     {
         a::string_builder<1024> str;
-        str.append_format("%s%cbin%cclang++.exe", m_llvm_base, PATH_SEPARATOR, PATH_SEPARATOR);
+        str.append_format("%s%cbin%c%s",
+            m_llvm_base, PATH_SEPARATOR, PATH_SEPARATOR, CLANG_EXE);
         for (size_t i = 0; i < nargs; ++i)
             str.append_format(" %s", args[i]);
 

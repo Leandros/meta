@@ -87,6 +87,15 @@ parse_options(int, char **argv)
 
 
 /* ========================================================================= */
+/* Configuration                                                             */
+#if USING(OS_WINDOWS)
+    #define LLVM_PATH "..\\LLVM-5.0.0-win64"
+#elif USING(OS_MAC)
+    #define LLVM_PATH "../clang+llvm-5.0.0-x86_64-apple-darwin"
+#endif
+
+
+/* ========================================================================= */
 /* ENTRY                                                                     */
 /* ========================================================================= */
 int
@@ -98,7 +107,7 @@ main(int argc, char **argv)
     if (optind == argc)
         return fprintf(stderr, "error: requires file argument\n"), 1;
 
-    auto driver = clang::make_driver("..\\LLVM-5.0.0-win64");
+    auto driver = clang::make_driver(LLVM_PATH);
     if (!driver)
         return 1;
 

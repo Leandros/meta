@@ -21,7 +21,7 @@
 #define LIBA_IO_HXX
 #pragma once
 
-#include <stdlib.h>
+#include <stddef.h>
 namespace a {
 
 
@@ -91,7 +91,7 @@ private:
     struct pctx *m_impl = nullptr;
 };
 
-
 } /* namespace a */
+
 #endif /* LIBA_IO_HXX */
 

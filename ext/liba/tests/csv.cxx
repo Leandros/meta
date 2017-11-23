@@ -17,6 +17,7 @@
 /* along with liba.  If not, see <http://www.gnu.org/licenses/>.             */
 /* ========================================================================= */
 
+#include <string.h>
 #include <a/csv.hxx>
 
 
@@ -25,15 +26,26 @@ TEST_CASE("csv", "[csv]")
     a::csv parser('\t');
 
     SECTION("simple test") {
-        char const *simple =
+        int correct_rows[] = { 0, 0, 0, 1, 1, 1 };
+        int correct_cols[] = { 0, 1, 2, 0, 1, 2 };
+        char const *correct_strs[] = {
+            "ADS", "DE1234", "DE5678",
+            "ALV", "DE0123", "DE4567"
+        };
+
+        char const *csv =
             "ADS\tDE1234\tDE5678\n"
             "ALV\tDE0123\tDE4567\n";
 
-        auto cb = [](char const *s, size_t n, int row, int col) {
-            printf("'%.*s' (%d, %d)\n", (int)n, s, row, col);
+        int counter = 0;
+        auto cb = [&](char const *s, size_t n, int row, int col) {
+            REQUIRE(correct_rows[counter] == row);
+            REQUIRE(correct_cols[counter] == col);
+            REQUIRE(strncmp(correct_strs[counter], s, n) == 0);
+            counter++;
         };
 
-        parser.parse(simple, cb);
+        parser.parse(csv, cb);
     }
 }
 

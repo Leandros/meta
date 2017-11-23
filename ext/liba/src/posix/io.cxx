@@ -40,25 +40,20 @@ namespace a {
 #define PIPE_WRITE      1
 #define GET_EXITCODE(status) (status & 0xFF)
 #define SET_EXITCODE(status) ((status & 0xFF) | 0x100)
-#define STRING_MEMBER(name, s) char name[sizeof(s)]
-#define STRING_INIT(name, s) memcpy(name, s, sizeof(s))
+#define STRING_MEMBER(name, s) char name[sizeof(s)] = s
 struct pctx {
-    int pid;
-    int in[2];
-    int out[2];
-    int status;
-    unsigned mode;
-    char *cmdline;
+    int pid = 0;
+    int in[2] = {0};
+    int out[2] = {0};
+    int status = 0;
+    unsigned mode = 0;
+    char *cmdline = nullptr;
     STRING_MEMBER(shell, "/bin/sh");
     STRING_MEMBER(arg0, "-c");
+    STRING_MEMBER(env, "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin");
 
-    inline pctx()
-    {
-        memset(this, 0x0, sizeof(*this));
-        STRING_INIT(shell, "/bin/sh");
-        STRING_INIT(arg0, "-c");
-    }
-    inline ~pctx() { delete[] cmdline; }
+    pctx() = default;
+    ~pctx() { free(cmdline); }
 };
 
 
@@ -71,7 +66,10 @@ process::~process()
 bool
 process::create(char const *cmd, char const *mode)
 {
-    m_impl = new pctx;
+    bool success = false;
+    if (!m_impl) m_impl = new pctx;
+    else new(m_impl) pctx;
+
     if (mode) {
         for (; (*mode) != '\0'; ++mode) {
             if ((*mode) == 'r')
@@ -86,6 +84,7 @@ process::create(char const *cmd, char const *mode)
         if (pipe(m_impl->out) < 0)
             return false;
     Auto(
+        if (success) return;
         if (m_impl->out[0]) ::close(m_impl->out[0]);
         if (m_impl->out[1]) ::close(m_impl->out[1]);
     );
@@ -95,14 +94,15 @@ process::create(char const *cmd, char const *mode)
         if (pipe(m_impl->in) < 0)
             return false;
     Auto(
+        if (success) return;
         if (m_impl->in[0]) ::close(m_impl->in[0]);
         if (m_impl->in[1]) ::close(m_impl->in[1]);
     );
 
     /* Create commandline. */
-    size_t lcmd = (size_t)snprintf(NULL, 0, "%s", cmd) + 1;
-     m_impl->cmdline = new char[lcmd];
-    snprintf(m_impl->cmdline, lcmd, "%s", cmd);
+    if (m_impl->cmdline)
+        free(m_impl->cmdline);
+    m_impl->cmdline = strdup(cmd);
 
     char *argv[4];
     argv[0] = m_impl->shell;
@@ -110,8 +110,7 @@ process::create(char const *cmd, char const *mode)
     argv[2] = m_impl->cmdline;
     argv[3] = NULL;
 
-    char env[] = "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
-    char *env_arr[] = { env, NULL };
+    char *env_arr[] = { m_impl->env, NULL };
 
     /* Create child process. */
     m_impl->pid = fork();
@@ -139,9 +138,11 @@ process::create(char const *cmd, char const *mode)
                 exit(1);
         }
 
+        success = true;
         execve(argv[0], argv, env_arr);
 
         /* execv only return on error. */
+        success = false;
         perror("execv");
         exit(1);
 
@@ -154,6 +155,7 @@ process::create(char const *cmd, char const *mode)
         if ((m_impl->mode & POPEN_WRITE))
             ::close(m_impl->in[PIPE_READ]);
 
+        success = true;
         return true;
     }
 }
