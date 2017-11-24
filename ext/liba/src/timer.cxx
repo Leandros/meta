@@ -46,11 +46,19 @@ namespace internal
 
 #if USING(OS_WINDOWS)
 static inline int64_t
-s_filetime_to_msec(const FILETIME *ft)
+filetime_to_msec(FILETIME const *ft)
 {
     ULARGE_INTEGER dateTime;
     memcpy(&dateTime, ft, sizeof(dateTime));
     return (int64_t)(dateTime.QuadPart / 10000);
+}
+
+static inline int64_t
+filetime_to_usec(FILETIME const *ft)
+{
+    ULARGE_INTEGER dateTime;
+    memcpy(&dateTime, ft, sizeof(dateTime));
+    return (int64_t)(dateTime.QuadPart / 10);
 }
 #endif
 
@@ -84,7 +92,7 @@ sleep(int ms)
 
 
 int64_t
-time(void)
+epoch(void)
 {
 #if USING(OS_MAC) || USING(OS_LINUX)
     struct timeval tv;
@@ -94,7 +102,28 @@ time(void)
 #elif USING(OS_WINDOWS)
     FILETIME ft;
     GetSystemTimeAsFileTime(&ft);
-    return internal::s_filetime_to_msec(&ft);
+    return internal::filetime_to_msec(&ft) + INT64_C(11644473600000);
+#endif
+}
+
+int64_t
+time(void)
+{
+#if USING(OS_MAC) || USING(OS_LINUX)
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return int64_t(INT64_C(tv.tv_sec) * INT64_C(1'000'000) + INT64_C(tv.tv_usec));
+
+#elif USING(OS_WINDOWS)
+    FILETIME ft;
+    GetSystemTimeAsFileTime(&ft);
+    /*
+     * The epoch on Windows is 1601-01-01 00:00:00 UTC.
+     * The epoch on Unix is 1970-01-01 00:00:00 UTC.
+     * That's a difference of 134774 days, or 11644473600 seconds.
+     * The following will convert the windows epoch to unix epoch.
+     */
+    return internal::filetime_to_usec(&ft) + INT64_C(11644473600000000);
 #endif
 }
 
@@ -108,7 +137,7 @@ mono(void)
     host_get_clock_service(mach_host_self(), SYSTEM_CLOCK, &cclock);
     clock_get_time(cclock, &mts);
     mach_port_deallocate(mach_task_self(), cclock);
-    return (int64_t) ((int64_t) mts.tv_sec * 1000 + (int64_t) mts.tv_nsec / 1000000);
+    return (int64_t) ((int64_t)mts.tv_sec * 1000 + (int64_t)mts.tv_nsec / 1000000);
 
 #elif USING(OS_LINUX)
     struct timespec ts;

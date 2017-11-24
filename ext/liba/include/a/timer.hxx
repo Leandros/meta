@@ -39,7 +39,14 @@ void sleep(int ms);
 
 /*!
  * \brief Get the current system time.
- * \return Milliseconds since epoch.
+ * \return Milliseconds since 1st Jan 1970.
+ */
+int64_t epoch();
+
+
+/*!
+ * \brief Get the current system time.
+ * \return Microseconds since 1st Jan 1970.
  */
 int64_t time();
 
