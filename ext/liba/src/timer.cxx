@@ -20,6 +20,7 @@
 #include <a/timer.hxx>
 #include <string.h>
 #include <assert.h>
+#include <time.h>
 
 #if USING(OS_WINDOWS)
     #include <a/win32/misc.h>
@@ -112,7 +113,7 @@ time(void)
 #if USING(OS_MAC) || USING(OS_LINUX)
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    return int64_t(INT64_C(tv.tv_sec) * INT64_C(1'000'000) + INT64_C(tv.tv_usec));
+    return int64_t(int64_t(tv.tv_sec) * int64_t(1'000'000) + int64_t(tv.tv_usec));
 
 #elif USING(OS_WINDOWS)
     FILETIME ft;

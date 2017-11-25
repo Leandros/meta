@@ -19,6 +19,7 @@
 
 #include <time.h>
 #include <string.h>
+#include <assert.h>
 #include <a/file.hxx>
 #include <a/iconv.hxx>
 #include <a/platform.hxx>
