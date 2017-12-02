@@ -103,7 +103,7 @@ epoch(void)
 #elif USING(OS_WINDOWS)
     FILETIME ft;
     GetSystemTimeAsFileTime(&ft);
-    return internal::filetime_to_msec(&ft) + INT64_C(11644473600000);
+    return internal::filetime_to_msec(&ft) - INT64_C(11644473600000);
 #endif
 }
 
@@ -124,7 +124,7 @@ time(void)
      * That's a difference of 134774 days, or 11644473600 seconds.
      * The following will convert the windows epoch to unix epoch.
      */
-    return internal::filetime_to_usec(&ft) + INT64_C(11644473600000000);
+    return internal::filetime_to_usec(&ft) - INT64_C(11644473600000000);
 #endif
 }
 
