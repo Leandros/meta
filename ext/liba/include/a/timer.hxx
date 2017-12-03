@@ -23,6 +23,7 @@
 
 #include <a/platform.hxx>
 #include <stdint.h>
+#include <time.h>
 
 namespace a
 {
@@ -63,6 +64,30 @@ int64_t mono();
  * \return Microseconds.
  */
 int64_t usecs();
+
+
+/*!
+ * \brief Convert a time_t into microseconds.
+ * \param[in] t Time, obtained from any of the C-style time APIs.
+ * \return Microseconds since 1st Jan 1970.
+ */
+inline int64_t
+to_usecs(time_t t)
+{
+    return int64_t(t) * int64_t(1000000);
+}
+
+
+/*!
+ * \brief Convert a time_t into milliseconds.
+ * \param[in] t Time, obtained from any of the C-style time APIs.
+ * \return Milliseconds since 1st Jan 1970.
+ */
+inline int64_t
+to_msecs(time_t t)
+{
+    return int64_t(t) * int64_t(1000);
+}
 
 
 } /* namespace timer */

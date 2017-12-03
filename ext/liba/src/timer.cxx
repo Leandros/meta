@@ -107,6 +107,7 @@ epoch(void)
 #endif
 }
 
+
 int64_t
 time(void)
 {
@@ -194,6 +195,13 @@ usecs(void)
     QueryPerformanceCounter(&count);
     return (int64_t)(count.QuadPart * 1000000) / frequency;
 #endif
+}
+
+
+int64_t
+to_usecs(time_t t)
+{
+    return t * 1000000;
 }
 
 
