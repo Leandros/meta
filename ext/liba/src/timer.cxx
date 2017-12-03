@@ -197,14 +197,6 @@ usecs(void)
 #endif
 }
 
-
-int64_t
-to_usecs(time_t t)
-{
-    return t * 1000000;
-}
-
-
 } /* namespace timer */
 
 } /* namespace a */
