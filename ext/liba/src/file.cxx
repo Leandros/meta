@@ -24,7 +24,6 @@
 #include <a/iconv.hxx>
 #include <a/platform.hxx>
 #include <a/utilities.hxx>
-namespace a {
 
 /* ========================================================================= */
 /* Cross-platform                                                            */
@@ -60,6 +59,7 @@ namespace a {
 #endif
 
 
+namespace a {
 /* ========================================================================= */
 /* Helper                                                                    */
 /* ========================================================================= */
@@ -78,10 +78,8 @@ gmtime_r(const time_t *timep, struct tm *result)
 /* ========================================================================= */
 /* FILE SYSTEM                                                               */
 /* ========================================================================= */
-namespace fs {
-
 bool
-rmdir(char const *path)
+fs::rmdir(char const *path)
 {
 #if USING(OS_WINDOWS)
     wchar_t pathw[MAX_PATH+1];
@@ -89,12 +87,12 @@ rmdir(char const *path)
         return false;
     return RemoveDirectoryW(pathw);
 #else
-    return rmdir(path) == 0;
+    return ::rmdir(path) == 0;
 #endif
 }
 
 bool
-rm(char const *path)
+fs::rm(char const *path)
 {
 #if USING(OS_WINDOWS)
     wchar_t pathw[MAX_PATH+1];
@@ -107,7 +105,7 @@ rm(char const *path)
 }
 
 bool
-mv(char const *from, char const *to)
+fs::mv(char const *from, char const *to)
 {
 #if USING(OS_WINDOWS)
     wchar_t fromw[MAX_PATH+1], tow[MAX_PATH+1];
@@ -122,7 +120,7 @@ mv(char const *from, char const *to)
 }
 
 bool
-cp(char const *from, char const *to)
+fs::cp(char const *from, char const *to)
 {
 #if USING(OS_WINDOWS)
     wchar_t fromw[MAX_PATH+1], tow[MAX_PATH+1];
@@ -163,7 +161,7 @@ cp(char const *from, char const *to)
 }
 
 bool
-mv_safe(char const *from, char const *to)
+fs::mv_safe(char const *from, char const *to)
 {
 #if USING(OS_WINDOWS)
     wchar_t fromw[MAX_PATH+1], tow[MAX_PATH+1];
@@ -182,7 +180,7 @@ mv_safe(char const *from, char const *to)
 }
 
 bool
-exists(char const *path)
+fs::exists(char const *path)
 {
 #if USING(OS_WINDOWS)
     DWORD attrib;
@@ -201,7 +199,7 @@ exists(char const *path)
 }
 
 int64_t
-time_created(char const *path, struct tm *t)
+fs::time_created(char const *path, struct tm *t)
 {
 #if USING(OS_WINDOWS)
     HANDLE hFile;
@@ -282,7 +280,7 @@ time_created(char const *path, struct tm *t)
 }
 
 bool
-get_exe_path(char *out, size_t size)
+fs::get_exe_path(char *out, size_t size)
 {
 #if USING(OS_WINDOWS)
     wchar_t bufw[MAX_PATH+1];
@@ -340,16 +338,12 @@ get_exe_path(char *out, size_t size)
 #endif
 }
 
-} /* namespace fs */
-
 
 /* ========================================================================= */
 /* FILE                                                                      */
 /* ========================================================================= */
-namespace file {
-
 bool
-write(void const *buf, size_t size, char const *path)
+file::write(void const *buf, size_t size, char const *path)
 {
     FILE *fh;
     if ((fh = fopen(path, "wb")) == NULL)
@@ -361,7 +355,7 @@ write(void const *buf, size_t size, char const *path)
 }
 
 char *
-read(char const *path, size_t *nbytes)
+file::read(char const *path, size_t *nbytes)
 {
     FILE *fh;
     off64_t off;
@@ -396,7 +390,7 @@ e0: fclose(fh);
 }
 
 size_t
-size(FILE *fh)
+file::size(FILE *fh)
 {
     off64_t off;
     if (fseek(fh, 0, SEEK_END))
@@ -409,6 +403,5 @@ size(FILE *fh)
 }
 
 
-} /* namespace file */
 } /* namespace a */
 
